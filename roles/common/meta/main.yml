@@ -12,6 +12,5 @@ dependencies:
 #  - {role: manala.motd,             tags: motd }
   - {role: alias,                   tags: alias }
   - {role: marcelnijenhof.firewalld,tags: network, when: ansible_os_family == 'RedHat' }
-  - {role: c2platform.platform.monit, tags: monitoring, when: monit_enabled|default(False) }
-  - {role: c2platform.test.swid, tags: swid }
+  - {role: c2platform.mgmt.monit,   tags: monitoring, when: monit_enabled|default(False) }
   - {role: cacerts, tags: ssl }

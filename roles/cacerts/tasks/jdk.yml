@@ -1,13 +1,13 @@
 ---
 - name: Check JDK
   stat:
-    path: "{{ jdk_version|java_keystore }}"
+    path: "{{ jdk_version|c2platform.core.java_keystore }}"
   register: keystore_stat
 
 - debug:
     msg: |+
       Importing / updating certificate {{ item['url'] }}
-      into {{ jdk_version|java_keystore }}
+      into {{ jdk_version|c2platform.core.java_keystore }}
   with_items: "{{ cacerts_import_certs_urls }}"
   when: keystore_stat.stat.exists
 
@@ -15,7 +15,7 @@
   java_cert:
     cert_alias: "{{ item['name'] }}"
     cert_path: "/tmp/{{ item['url']|basename }}"
-    keystore_path: "{{ jdk_version|java_keystore }}"
+    keystore_path: "{{ jdk_version|c2platform.core.java_keystore }}"
     keystore_pass: "changeit" # TODO
     executable: "{{ jdk_version|java_keytool }}"
     state: present
@@ -30,7 +30,7 @@
     cert_alias: "{{ item['name'] }}"
     cert_url: "{{ item['url'] }}"
     cert_port: "{{ item['port'] }}"
-    keystore_path: "{{ jdk_version|java_keystore }}"
+    keystore_path: "{{ jdk_version|c2platform.core.java_keystore }}"
     keystore_pass: "changeit" # TODO
     executable: "{{ jdk_version|java_keytool }}"
     state: present
