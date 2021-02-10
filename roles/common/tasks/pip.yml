@@ -1,0 +1,34 @@
+---
+- name: Pip conf
+  template:
+    src: pip.conf.j2
+    dest: /etc/pip.conf
+    mode: 0644
+  when: common_pip_repository_url is defined
+
+- name: Pip trust store
+  file:
+    path: "{{ common_pip_ca_trust_store }}"
+    state: directory
+    mode: 0755
+  when: common_pip_ca_bundle_url is defined
+
+- name: Pip ca bundle
+  get_url:
+    url: "{{ common_pip_ca_bundle_url }}"
+    dest: "{{ common_pip_ca_trust_store }}/{{ common_pip_ca_bundle_url | basename }}"
+  when: common_pip_ca_bundle_url is defined
+
+- name: Upgrade pip # noqa 301
+  command:
+    cmd: "{{ common_pip_install_upgrade }}"
+
+- name: Pip packages
+  pip:
+    name: '{{ common_pip_packages }}'
+    state: present
+
+- name: Pip packages extra
+  pip:
+    name: '{{ common_pip_packages_extra }}'
+    state: present

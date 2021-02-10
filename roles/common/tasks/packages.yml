@@ -1,0 +1,12 @@
+---
+- name: Common packages
+  package:
+    name: "{{ common_packages[ansible_os_family + ' ' + ansible_distribution_major_version ] }}"
+    state: present
+  when: common_packages[ansible_os_family + ' ' + ansible_distribution_major_version ]|default(False)
+
+- name: Common packages extra
+  package:
+    name: "{{ common_packages_extra[ansible_os_family + ' ' + ansible_distribution_major_version ] }}"
+    state: present
+  when: common_packages_extra[ansible_os_family + ' ' + ansible_distribution_major_version ]|default(False)

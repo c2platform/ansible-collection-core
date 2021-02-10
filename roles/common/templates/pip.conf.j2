@@ -1,0 +1,6 @@
+[global]
+index = {{ common_pip_repository_url }}
+index-url = {{ common_pip_repository_url_index }}
+{% if common_pip_ca_bundle_url is defined %}
+cert = {{ common_pip_ca_trust_store }}/{{ common_pip_ca_bundle_url | basename }}
+{% endif %}

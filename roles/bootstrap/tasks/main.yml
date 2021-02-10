@@ -1,0 +1,5 @@
+---
+- name: Bootstrap packages extra
+  package:
+    name: "{{ bootstrap_packages_extra }}"
+    state: present

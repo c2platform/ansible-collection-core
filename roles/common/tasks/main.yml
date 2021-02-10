@@ -1,0 +1,26 @@
+---
+- include: packages.yml
+- include: pip.yml
+- include: mounts.yml
+- include: user.yml
+  when: common_ansible_user_create
+
+- name: etc environment
+  template:
+    src: etc_environment.j2
+    dest: /etc/environment
+    mode: 0644
+
+- name: Custom prompt
+  copy:
+    content: 'export PS1="{{ common_terminal_prompt }}"'
+    dest: /etc/profile.d/custom_prompt.sh
+    mode: 0644
+  when: common_terminal_prompt is defined
+
+- name: Remove custom prompt
+  file:
+    state: absent
+    path: /etc/profile.d/custom_prompt.sh
+  when: common_terminal_prompt is not defined
+

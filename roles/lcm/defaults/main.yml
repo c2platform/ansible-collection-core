@@ -1,0 +1,12 @@
+---
+lcm_roles:
+  - jira
+  - confluence
+  - bitbucket
+  - nexus
+  - sonarqube
+  - guacamole
+  - awx
+  - myapp
+
+lcm_write_version_file: no

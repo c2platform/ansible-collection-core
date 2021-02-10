@@ -1,0 +1,35 @@
+---
+# install packages based on
+# ansible_os_family and ansible_distribution_major_version
+# e.g. CentOS 7, Red Hat 7, Ubuntu ..
+common_packages:
+  RedHat 7: ['python-pip','python-setuptools','openssl','unzip']
+
+common_packages_extra:
+  RedHat 7: []
+
+common_pip_packages:
+  - setuptools
+  - pyOpenSSL
+  - psycopg2-binary
+  - lxml
+
+common_pip_packages_extra: []
+
+common_ansible_user: ansible
+common_ansible_user_password: supersecure
+common_ansible_user_create: false
+common_ansible_user_expires: -1
+
+# common_ansible_authorized_keys: https://raw.githubusercontent.com/hashicorp/vagrant/master/keys/vagrant.pub
+
+# Configure custom prompt
+#common_terminal_prompt: "\e[01;31m[\u@{{ inventory_hostname }}\h \w]\\$\e[m "
+
+common_authorized_key_validate_certs: no
+
+common_selinux_permissive: false
+
+common_pip_ca_trust_store: /usr/share/pki/ca-trust-store-ansible-agent
+
+common_pip_install_upgrade: pip install --upgrade "pip < 21.0"

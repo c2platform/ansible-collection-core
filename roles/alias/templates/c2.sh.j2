@@ -1,0 +1,4 @@
+alias {{ alias_prefix }}-{{ item }}-tail="tail -f {{ alias.roles[item].logs|join(' ') }}"
+{%   for item2 in alias.roles[item].configs %}
+alias {{ alias_prefix }}-{{ item }}-edit-{{ item2 | basename | replace('/','-') | replace('.','-') }}="{{ alias_editor }} {{ item2 }}"
+{%   endfor %}  

@@ -1,0 +1,16 @@
+---
+- name: Add Ansible user
+  user:
+    name: '{{ common_ansible_user }}'
+    comment: Ansible
+    shell: /bin/bash
+    password: '{{ common_ansible_user_password | password_hash("sha512") }}'
+    expires: '{{ common_ansible_user_expires }}'
+
+- name: Set authorized key
+  authorized_key:
+    user: '{{ common_ansible_user }}'
+    state: present
+    key: '{{ common_ansible_authorized_keys }}'
+    validate_certs: '{{ common_authorized_key_validate_certs }}'
+  when: common_ansible_authorized_keys is defined
