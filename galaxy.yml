@@ -1,23 +1,24 @@
 
 namespace: c2platform
 name: core
+
 version: 1.0.0
-readme: README.md
 
 authors:
-- Onno van der Straaten
+- Onno van der Straaten (https://github.com/onknows)
 
-description: C2 Platform Core Ansible Roles & Plugins
-
-license_file: 'LICENSE'
+description: C2 Platform Ansible Collection with Core Roles, Modules, Filters
+license_file: LICENSE
+readme: README.md
 
 tags: []
-dependencies: {}
+
+dependencies:
+  c2platform.platform: ">=1.0.0"
 
 repository: https://github.com/c2platform/ansible-collection-core
 documentation: https://github.com/c2platform/ansible-collection-core
-
-homepage: https://github.com/c2platform
+homepage: https://github.com/c2platform/
 issues: https://github.com/c2platform/ansible-collection-core/issues
 
 build_ignore: []
