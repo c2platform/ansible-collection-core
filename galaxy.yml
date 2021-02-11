@@ -1,5 +1,5 @@
 
-namespace: onknows.c2platform
+namespace: c2platform
 name: core
 
 version: 1.0.0
@@ -13,8 +13,7 @@ readme: README.md
 
 tags: []
 
-dependencies:
-  c2platform.platform: ">=1.0.0"
+dependencies: []
 
 repository: https://github.com/c2platform/ansible-collection-core
 documentation: https://github.com/c2platform/ansible-collection-core
