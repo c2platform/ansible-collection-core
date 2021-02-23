@@ -33,3 +33,6 @@ common_selinux_permissive: false
 common_pip_ca_trust_store: /usr/share/pki/ca-trust-store-ansible-agent
 
 common_pip_install_upgrade: pip install --upgrade "pip < 21.0"
+
+common_manage_sudo: false
+common_manage_sudoers: false

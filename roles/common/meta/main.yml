@@ -4,8 +4,8 @@ dependencies:
   - {role: bootstrap,               tags: ansible }
   - {role: lcm,                     tags: ansible }
   - {role: lvm,                     tags: lvm }
-  - {role: ajsalminen.hosts,        tags: network }
-  - {role: Stouts.sudo,             tags: sudo }
+  - {role: ajsalminen.hosts,        tags: network, when: common_manage_hosts|default(False) }
+  - {role: Stouts.sudo,             tags: sudo, when: common_manage_sudoers|default(False) }
   - {role: alias,                   tags: alias }
   - {role: marcelnijenhof.firewalld,tags: network, when: ansible_os_family == 'RedHat' }
   - {role: c2platform.mgmt.monit,   tags: monitoring, when: monit_enabled|default(False) }
