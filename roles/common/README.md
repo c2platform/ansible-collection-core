@@ -1,13 +1,47 @@
 
-# Ansible Role: Common
+# Ansible Role Common
 
-An Ansible Role that installs [AWX](https://github.com/ansible/awx/) on RedHat/CentOS. This "internal" role is based on the [local docker](https://github.com/ansible/awx/tree/devel/installer/roles/local_docker) installer option. 
+<!-- MarkdownTOC levels="2,3,4" autolink="true" -->
 
-Note:
-The local docker option of AWX is not 100% reliable. This is result of a bug in the [local docker](https://github.com/ansible/awx/tree/devel/installer/roles/local_docker) installer option which can cause AWX database migrations to fail. AWX database migrations started by container **awx_task** will run too soon - before the **awx_postgres** has completely finished setup. `docker logs -f awx_task` will show a lot of database errors in that case. 
+- [Requirements](#requirements)
+- [Role Variables](#role-variables)
+    - [Optional Ansible User](#optional-ansible-user)
+- [Dependencies](#dependencies)
+- [Example Playbook](#example-playbook)
 
-To fix this stop **awx_web** and restart **awx_task**. The Docker logs should show **awx_task** migrations running and completing after which logs no longer show error messages. Then start **awx_web**.
+<!-- /MarkdownTOC -->
 
 ## Requirements
 
+<!-- Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required. -->
+
 ## Role Variables
+
+<!--  A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well. -->
+
+### Optional Ansible User
+
+Create an Ansible user. Default is disabled because it is mostly only used in development environments.
+
+```yaml
+common_ansible_user: ansible
+common_ansible_user_password: $1$tBPdczeQ$Kca8G0jWZ4fyGsgCtZD5F/ # supersecure
+common_ansible_user_create: false
+common_ansible_user_expires: -1
+```
+
+Note: `common_ansible_user_password` is the password shadow hash created with for example `openssl passwd -1 "mypassword"`. This done to prevent continuous changes being reported to the account if we use Ansible to do this for using for example `password_hash("sha512")` filter. 
+
+## Dependencies
+
+<!--   A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles. -->
+
+## Example Playbook
+
+<!--   Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too: -->
+
+```yaml
+    - hosts: servers
+      roles:
+         - { role: username.rolename, x: 42 }
+```
