@@ -4,7 +4,7 @@
     name: '{{ common_ansible_user }}'
     comment: Ansible
     shell: /bin/bash
-    password: '{{ common_ansible_user_password | password_hash("sha512") }}'
+    password: '{{ common_ansible_user_password }}'
     expires: '{{ common_ansible_user_expires }}'
 
 - name: Set authorized key

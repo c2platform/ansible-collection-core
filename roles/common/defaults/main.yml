@@ -17,7 +17,7 @@ common_pip_packages:
 common_pip_packages_extra: []
 
 common_ansible_user: ansible
-common_ansible_user_password: supersecure
+common_ansible_user_password: $1$tBPdczeQ$Kca8G0jWZ4fyGsgCtZD5F/ # supersecure
 common_ansible_user_create: false
 common_ansible_user_expires: -1
 
