@@ -21,9 +21,9 @@
   with_items: "{{ adoptopenjdk.versions }}"
   when: adoptopenjdk is defined and adoptopenjdk.versions is defined
   vars:
-    role: "{{ jdk_version }}"
+    jdk: "{{ adoptopenjdk.versions[jdk_version_no] }}"
   loop_control:
-    loop_var: jdk_version
+    loop_var: jdk_version_no
 
 - name: "Import certs for OS"
   include: os.yml
