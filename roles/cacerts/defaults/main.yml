@@ -31,5 +31,9 @@ cacerts_import_certs_urls: []
 #    url: https://example.com/SectigoRSADVBundle.crt
 
 # Workaround for bug in java_cert
-# See https://github.com/ansible/ansible/issues/54481
-cacerts_java_cert_proxy: 1.1.1.3:3128 # no protocol http
+# java_cert will pick up system proxy settings but this
+# does not work see https://github.com/ansible/ansible/issues/54481
+#cacerts_java_cert_environment: # no protocol http
+#  https_proxy: 1.1.1.3:3128
+cacerts_java_cert_environment:
+  dummy: value #  pass some setting to suppress WARNING
