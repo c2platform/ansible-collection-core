@@ -28,3 +28,4 @@
 - include_vars:
     dir: "{{ common_secrets_dir }}"
   when: common_secrets_dir|default(False)
+  ignore_errors: yes
