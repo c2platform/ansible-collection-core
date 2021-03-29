@@ -6,7 +6,7 @@
 
 - block:
     - name: "Import bundles in JDK cacerts"
-      community.general.java_cert:
+      java_cert:
         cert_alias: "{{ jdk['name'] }}"
         cert_path: "/tmp/{{ jdk['url']|basename }}"
         keystore_path: "{{ jdk_version_no|c2platform.core.java_keystore(jdk) }}"
@@ -18,7 +18,7 @@
       notify: "{{ jdk['notify']|default(omit) }}"
 
     - name: "Import trusted sites in JDK cacerts"
-      community.general.java_cert:
+      java_cert:
         cert_alias: "{{ item['name'] }}"
         cert_url: "{{ item['url'] }}"
         cert_port: "{{ item['port'] }}"
