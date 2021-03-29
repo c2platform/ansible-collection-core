@@ -40,10 +40,12 @@ Currently AWX lacks adequate support for Ansible vault secrets. See for example 
 There are many workarounds available. This role support one solution with a optional var `common_secrets_dir`. You can for example set this to `"{{ inventory_dir }}/secret_vars"` and then create a folder `secret_vars` in your repo next to the inventory file. 
 
 ```yaml
-common_secrets_dir: "{{ inventory_dir }}/secret_vars"
+common_secrets_dir: "{{ inventory_dir }}/project/inventory/test/secret_vars"
 ```
 
 Any file you then put in this directory will then be included when this role runs.
+
+Note: when using AWX the `inventory_dir` is not what you might expect. It is not for example the same as the location in source control.
 
 ## Dependencies
 
