@@ -9,4 +9,5 @@ dependencies:
   - {role: alias,                   tags: alias }
   - {role: marcelnijenhof.firewalld,tags: network, when: ansible_os_family == 'RedHat' }
   - {role: c2platform.mgmt.monit,   tags: monitoring, when: monit_enabled|default(False) }
-  - {role: cacerts, tags: ssl }
+  - {role: cacerts,                 tags: ssl }
+  - {role: arillso.logrotate,       tags: logging, when: logrotate_applications is defined and logrotate_applications|length > 0 }
