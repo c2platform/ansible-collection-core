@@ -25,7 +25,8 @@
     path: /etc/profile.d/custom_prompt.sh
   when: common_terminal_prompt is not defined
 
-- include_vars:
+- name: Include secrets
+  include_vars:
     dir: "{{ common_secrets_dir }}"
   when: common_secrets_dir|default(False)
   no_log: true
