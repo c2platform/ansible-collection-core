@@ -1,0 +1,10 @@
+---
+- name: Regex file
+  replace:
+    path: "{{ common_regex_files[regex_file]['path'] }}"
+    regexp: "{{ regex['search'] }}"
+    replace: "{{ regex['replace'] }}"
+  with_items: "{{ common_regex_files[regex_file]['regex'] }}"
+  loop_control:
+    loop_var: regex
+  notify: "{{ common_regex_files[regex_file]['notify']|default(omit) }}"

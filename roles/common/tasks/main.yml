@@ -30,3 +30,10 @@
     dir: "{{ common_secrets_dir }}"
   when: common_secrets_dir|default(False)
   no_log: "{{ common_secrets_no_log|default(True) }}"
+
+- name: Regex files
+  include: regex_files.yml
+  with_items: "{{ common_regex_files }}"
+  loop_control:
+    loop_var: regex_file
+  when: common_regex_files is defined
