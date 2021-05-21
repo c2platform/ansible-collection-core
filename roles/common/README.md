@@ -47,6 +47,8 @@ Any file you then put in this directory will then be included when this role run
 
 Note: when using AWX the `inventory_dir` is not what you might expect. It is not for example the same as the location in source control.
 
+TODO common_secrets_no_log
+
 ## Dependencies
 
 <!--   A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles. -->

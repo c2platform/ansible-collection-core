@@ -29,4 +29,4 @@
   include_vars:
     dir: "{{ common_secrets_dir }}"
   when: common_secrets_dir|default(False)
-  no_log: false # TODO
+  no_log: "{{ common_secrets_no_log|default(True) }}"
