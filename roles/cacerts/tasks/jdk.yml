@@ -30,5 +30,5 @@
       notify: "{{ item['notify']|default(omit) }}"
       register: jdk_trusted_sites # cmd, msg, rc
       ignore_errors: yes
-      environment: "{{ cacerts_java_cert_environment }}"
+      environment: "{{ cacerts_java_cert_environment|default(omit) }}"
   when: keystore.stat.exists

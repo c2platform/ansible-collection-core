@@ -35,5 +35,5 @@ cacerts_import_certs_urls: []
 # does not work see https://github.com/ansible/ansible/issues/54481
 #cacerts_java_cert_environment: # no protocol http
 #  https_proxy: 1.1.1.3:3128
-cacerts_java_cert_environment:
-  dummy: value #  pass some setting to suppress WARNING
+#cacerts_java_cert_environment:
+#  dummy: value #  pass some setting to suppress WARNING
