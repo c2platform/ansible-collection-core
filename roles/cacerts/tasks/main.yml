@@ -27,3 +27,10 @@
 
 - name: "Import certs for OS"
   include: os.yml
+
+- name: Certs with CA
+  include: ca.yml
+  with_items: "{{ cacerts_ca_domains }}"
+  loop_control:
+    loop_var: domain
+  when: cacerts_ca_server == inventory_hostname

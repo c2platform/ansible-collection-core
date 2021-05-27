@@ -37,3 +37,8 @@ cacerts_import_certs_urls: []
 #  https_proxy: 1.1.1.3:3128
 #cacerts_java_cert_environment:
 #  dummy: value #  pass some setting to suppress WARNING
+
+# CA server
+cacerts_overwrite: no
+cacerts_ca_dir: /opt/ca
+cacerts_ca_server: mynode

@@ -13,6 +13,7 @@ This role can also be used to manage OS keystore.
   - [Trusted sites](#trusted-sites)
   - [Add certificates](#add-certificates)
   - [Add OS certs](#add-os-certs)
+  - [CA server](#ca-server)
 - [Dependencies](#dependencies)
 - [Example playbook](#example-playbook)
 
@@ -83,6 +84,49 @@ Configure array of URLS to download into OS keystore:
 ```yaml
 cacerts_os_ca_pem_urls:
   - https://example.com/SectigoRSADVBundle.crt
+```
+
+### CA server
+
+This role can provide a simple CA server that uses Ansible [Community.Crypto](https://docs.ansible.com/ansible/latest/collections/community/crypto/index.html) collection and some Ansible tasks to provide simple solution for a CA server.
+
+For example vars below will do the following:
+
+1. Generate CA key, csr, crt for  __mydomain.com__ on CA server `mycaserver`. 
+2. Generate a key, csr and crt for application __myapp__ on CA server `mycaserver`.
+3. Deploy the __myapp__ key, crt to all servers in `myappservers` group. To all paths configured.
+4. Notify `reload-myapp-service` if the key or crt changes.
+
+```yaml
+cacerts_ca_server: mycaserver # should correspond to inventory_hostname
+cacerts_ca_dir: /vagrant/.ca # optional - default is /opt/ca
+cacerts_ca_domains:
+  mydomain.com: # used for CA key, csr, crt
+    myapp: # create certificate for application
+      common_name: myapp
+      subject_alt_name:
+        - DNS:myapp.mydomain.com
+        - "DNS:{{ ansible_hostname }}"
+        - "DNS:{{ ansible_fqdn }}"
+      myappservers: # corresponds to a group_names 
+        paths:
+          - key: /somepath/myapp.key
+            crt: /somepath/myapp.crt
+          - key: /someotherpath/myapp.key
+            crt: /someotherpath/myapp.crt
+        notify: reload-myapp-service
+```
+Note: roles that want to use this simple CA server solution should include `cert` tasks from `c2platform.tasks` as follows:
+```yaml
+- include_role:
+    name: c2platform.tasks
+    tasks_from: cert
+  vars:
+    ca_domain_cert: "{{ cacerts_ca_domains[domain] }}"
+  when: cacerts_ca_domains is defined
+  with_items: "{{ cacerts_ca_domains }}"
+  loop_control:
+    loop_var: domain
 ```
 
 ## Dependencies
