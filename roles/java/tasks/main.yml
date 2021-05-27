@@ -1,3 +1,6 @@
 ---
 - include: install.yml
   when: adoptopenjdk.version|default(False)
+
+- include: bundles.yml
+  when: adoptopenjdk.version|default(False)
