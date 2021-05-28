@@ -3,4 +3,4 @@
   when: adoptopenjdk.version|default(False)
 
 - include: bundles.yml
-  when: adoptopenjdk.version|default(False)
+  when: adoptopenjdk.version|default(False) and adoptopenjdk['versions'][adoptopenjdk['version']]['bundles'] is defined
