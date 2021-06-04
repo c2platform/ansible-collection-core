@@ -37,3 +37,10 @@
   loop_control:
     loop_var: regex_file
   when: common_regex_files is defined
+
+- name: Git repos
+  include: git.yml
+  with_items: "{{ common_git_repos }}"
+  vars:
+    common_git_repo: "{{ common_git_repos[item] }}"
+  when: common_git_repos is defined

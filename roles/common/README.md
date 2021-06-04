@@ -4,6 +4,7 @@
 <!-- MarkdownTOC levels="2,3,4" autolink="true" -->
 
 - [Requirements](#requirements)
+- [Git repositories](#git-repositories)
 - [Role Variables](#role-variables)
     - [Optional Ansible User](#optional-ansible-user)
     - [Optional AWX Ansible Vault](#optional-awx-ansible-vault)
@@ -15,6 +16,10 @@
 ## Requirements
 
 <!-- Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required. -->
+
+## Git repositories
+
+Use `common_git_repos` to define Git repositories to checkout and where using [ansible.builtin.git](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/git_module.html).
 
 ## Role Variables
 

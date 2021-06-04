@@ -1,0 +1,4 @@
+---
+- name: Git checkout
+  ansible.builtin.git: "{{ common_git_repo }}"
+  # changed_when: False
