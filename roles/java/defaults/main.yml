@@ -1,10 +1,11 @@
 ---
 adoptopenjdk:
-  version: jdk8_222b10_oj9
+  version: jdk11_0411_oj9
+  version_alternatives: []
   versions:
-    jdk8_222b10_oj9:
-      url: https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u222-b10_openj9-0.15.1/OpenJDK8U-jdk_x64_linux_openj9_8u222b10_openj9-0.15.1.tar.gz
-      checksum: 20cff719c6de43f8bb58c7f59e251da7c1fa2207897c9a4768c8c669716dc819
+    jdk8_8u292b10_hs:
+      url: https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u292-b10/OpenJDK8U-jdk_x64_linux_hotspot_8u292b10.tar.gz
+      checksum: 0949505fcf42a1765558048451bb2a22e84b3635b1a31dd6191780eeccaa4ada
     jdk11_0411_oj9:
       url: https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.4%2B11_openj9-0.15.1/OpenJDK11U-jdk_x64_linux_openj9_11.0.4_11_openj9-0.15.1.tar.gz
       checksum: b1099cccc80a3f434728c9bc3b8a90395793b625f4680ca05267cf635143d64d

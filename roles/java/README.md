@@ -1,18 +1,16 @@
-# Ansible Role: AdoptOpenJDK
+# Ansible Role: Java
 
-A simple Ansible Role that installs [AdoptOpenJDK](https://adoptopenjdk.net/) on Linux servers. Java home will be made available as fact `adoptopenjdk_java_home`. 
+A simple Ansible Role that installs [AdoptOpenJDK](https://adoptopenjdk.net/) on Linux servers. 
 
 <!-- MarkdownTOC levels="2,3" autolink="true" -->
 
 - [Requirements](#requirements)
 - [Role Variables](#role-variables)
-    - [Install](#install)
-    - [Bundles](#bundles)
-    - [Etc environment / JAVA_HOME](#etc-environment--java_home)
+  - [Install](#install)
+  - [Bundles](#bundles)
+  - [Etc profile.d JAVA_HOME](#etc-profiled-java_home)
 - [Dependencies](#dependencies)
 - [Example Playbook](#example-playbook)
-- [License](#license)
-- [Author Information](#author-information)
 
 <!-- /MarkdownTOC -->
 
@@ -26,38 +24,35 @@ Available variables are listed below, along with default values. Version to inst
 
 ```yaml
 adoptopenjdk:
-  version: "jdk8u222b10_oj9"
+  version: "jdk11_0411_oj9"
 ```
 
 Vars for available versions to install
 
 ```yaml
 adoptopenjdk:
+  version: jdk11_0411_oj9
+  version_alternatives: []
   versions:
-    jdk8u222b10_oj9:
-      url: https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u222-b10_openj9-0.15.1/OpenJDK8U-jdk_x64_linux_openj9_8u222b10_openj9-0.15.1.tar.gz
-      checksum: 20cff719c6de43f8bb58c7f59e251da7c1fa2207897c9a4768c8c669716dc819
+    jdk8_8u292b10_hs:
+      url: https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u292-b10/OpenJDK8U-jdk_x64_linux_hotspot_8u292b10.tar.gz
+      checksum: 0949505fcf42a1765558048451bb2a22e84b3635b1a31dd6191780eeccaa4ada
+    jdk11_0411_oj9:
+      url: https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.4%2B11_openj9-0.15.1/OpenJDK11U-jdk_x64_linux_openj9_11.0.4_11_openj9-0.15.1.tar.gz
+      checksum: b1099cccc80a3f434728c9bc3b8a90395793b625f4680ca05267cf635143d64d
       bundles:
         - alias: bkd-ca
-          url: file:///vagrant/.ca/suwinet.nl/ca-suwinet.nl.crt      
+          url: file:///vagrant/.ca/mydomain/mydomain.crt      
 ```
 
 ### Bundles
 
 Using `bundles` as shown above it is possible to import certificates and CA bundles.
 
-### Etc environment / JAVA_HOME
+### Etc profile.d JAVA_HOME
 
-To add `JAVA_HOME` to `/etc/environment` use `adoptopenjdk_java_home_etc_environment: true`. Default is false.
+For the default java a etc profile `/etc/profile/jdk.sh` is created that contains the `JAVA_HOME` 
 
 ## Dependencies
 
 ## Example Playbook
-
-## License
-
-MIT / BSD
-
-## Author Information
-
-This role was created in 2019 by [Onno van der Straaten](https://www.onknows.com/).

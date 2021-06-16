@@ -1,39 +1,39 @@
 ---
 - name: Bundle fact
   set_fact:
-    bundles: "{{ adoptopenjdk['versions'][adoptopenjdk['version']]['bundles'] }}"
-    jdk: "{{ adoptopenjdk['versions'][adoptopenjdk['version']] }}"
+    bundles: "{{ adoptopenjdk['versions'][java_version]['bundles'] }}"
+    jdk: "{{ adoptopenjdk['versions'][java_version] }}"
 
 - name: Download bundle
   get_url:
     url: "{{ item['url'] }}"
     checksum: "{{ item['checksum']|default(omit) }}"
-    dest: "/var/tmp/{{ item['url']|basename }}"
+    dest: "/var/tmp/{{ item['url']|basename }}-{{ java_version|c2platform.core.java_folder }}"
   with_items: "{{ bundles }}"
   register: bundles_download
 
-- name: "Remove bundles from cacerts"
-  java_cert:
-    cert_alias: "{{ item['alias'] }}"
-    cert_path: "/var/tmp/{{ item['url']|basename }}"
-    keystore_path: "{{ adoptopenjdk['version']|c2platform.core.java_keystore(jdk) }}"
-    keystore_pass: "{{ jdk['keystore_pass']|default('changeit') }}"
-    executable: "{{ adoptopenjdk['version']|c2platform.core.java_keytool(jdk) }}"
-    state: absent
-  with_items: "{{ bundles }}"
-  ignore_errors: yes
-  notify: "{{ jdk['notify']|default(omit) }}"
-  when: bundles_download.changed
+- block:
+    - name: "Remove bundles"
+      java_cert:
+        cert_alias: "{{ item['alias'] }}"
+        cert_path: "/var/tmp/{{ item['url']|basename }}-{{ java_version|c2platform.core.java_folder }}"
+        keystore_path: "{{ java_version|c2platform.core.java_keystore(jdk) }}"
+        keystore_pass: "{{ jdk['keystore_pass']|default('changeit') }}"
+        executable: "{{ java_version|c2platform.core.java_keytool(jdk) }}"
+        state: absent
+      with_items: "{{ bundles }}"
+      ignore_errors: yes
+      notify: "{{ jdk['notify']|default(omit) }}"
 
-- name: "Add bundles from cacerts"
-  java_cert:
-    cert_alias: "{{ item['alias'] }}"
-    cert_path: "/var/tmp/{{ item['url']|basename }}"
-    keystore_path: "{{ adoptopenjdk['version']|c2platform.core.java_keystore(jdk) }}"
-    keystore_pass: "{{ jdk['keystore_pass']|default('changeit') }}"
-    executable: "{{ adoptopenjdk['version']|c2platform.core.java_keytool(jdk) }}"
-    state: present
-  with_items: "{{ bundles }}"
-  ignore_errors: yes
-  notify: "{{ jdk['notify']|default(omit) }}"
+    - name: "Add bundles"
+      java_cert:
+        cert_alias: "{{ item['alias'] }}"
+        cert_path: "/var/tmp/{{ item['url']|basename }}-{{ java_version|c2platform.core.java_folder }}"
+        keystore_path: "{{ java_version|c2platform.core.java_keystore(jdk) }}"
+        keystore_pass: "{{ jdk['keystore_pass']|default('changeit') }}"
+        executable: "{{ java_version|c2platform.core.java_keytool(jdk) }}"
+        state: present
+      with_items: "{{ bundles }}"
+      ignore_errors: yes
+      notify: "{{ jdk['notify']|default(omit) }}"
   when: bundles_download.changed
