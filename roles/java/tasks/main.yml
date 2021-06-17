@@ -20,7 +20,4 @@
   with_items: "{{ adoptopenjdk_versions }}"
   loop_control:
     loop_var: java_version
-  when: adoptopenjdk_versions['java_version']['bundles'] is defined
-
-- debug:
-    msg: "adoptopenjdk: {{ adoptopenjdk }}"
+  when: adoptopenjdk['versions'][java_version]['bundles'] is defined
