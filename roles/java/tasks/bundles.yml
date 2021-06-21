@@ -9,6 +9,7 @@
     url: "{{ item['url'] }}"
     checksum: "{{ item['checksum']|default(omit) }}"
     dest: "/var/tmp/{{ item['url']|basename }}-{{ java_version|c2platform.core.java_folder }}"
+    validate_certs: no
   with_items: "{{ bundles }}"
   register: bundles_download
 
