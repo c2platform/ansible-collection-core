@@ -4,12 +4,6 @@
     bundles: "{{ adoptopenjdk['versions'][java_version]['bundles'] }}"
     jdk: "{{ adoptopenjdk['versions'][java_version] }}"
 
-- debug:
-    msg: "bundles: {{ bundles }}"
-
-- debug:
-    msg: "jdk: {{ jdk }}"
-
 - name: Download bundle
   get_url:
     url: "{{ item['url'] }}"
