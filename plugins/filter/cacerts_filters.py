@@ -2,6 +2,7 @@
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
+import os
 
 
 # Return groups ( and inventory_hostname keys )
@@ -25,6 +26,13 @@ def cacerts_certificate_deploy_paths(certificate, inventory_hostname, groups):
     return pths
 
 
+# Return dirname of a certificate path for e.g stat.exists
+def cacerts_dirname(paths):
+    if 'crt' in paths[0]:
+        return os.path.dirname(paths[0]['crt'])
+    return os.path.dirname(paths[0]['pem'])
+
+
 class FilterModule(object):
     """ansible filters."""
 
@@ -33,5 +41,7 @@ class FilterModule(object):
             'cacerts_certificate_deploy_paths':
             cacerts_certificate_deploy_paths,
             'cacerts_certificate_group_keys':
-            cacerts_certificate_group_keys
+            cacerts_certificate_group_keys,
+            'cacerts_dirname':
+            cacerts_dirname
         }
