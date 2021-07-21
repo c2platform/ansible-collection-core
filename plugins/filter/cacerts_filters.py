@@ -30,6 +30,8 @@ def cacerts_certificate_deploy_paths(certificate, inventory_hostname, groups):
 def cacerts_dirname(paths):
     if 'crt' in paths[0]:
         return os.path.dirname(paths[0]['crt'])
+    if 'p12' in paths[0]:
+        return os.path.dirname(paths[0]['p12'])
     return os.path.dirname(paths[0]['pem'])
 
 
