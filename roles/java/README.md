@@ -1,6 +1,6 @@
 # Ansible Role: Java
 
-A simple Ansible Role that installs [AdoptOpenJDK](https://adoptopenjdk.net/) on Linux servers. 
+A simple Ansible Role that installs Java on Linux servers. 
 
 <!-- MarkdownTOC levels="2,3" autolink="true" -->
 
@@ -23,14 +23,14 @@ A simple Ansible Role that installs [AdoptOpenJDK](https://adoptopenjdk.net/) on
 Available variables are listed below, along with default values. Version to install 
 
 ```yaml
-adoptopenjdk:
+java:
   version: "jdk11_0411_oj9"
 ```
 
 Vars for available versions to install
 
 ```yaml
-adoptopenjdk:
+java:
   version: jdk11_0411_oj9
   version_alternatives: []
   versions:

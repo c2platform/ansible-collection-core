@@ -7,9 +7,9 @@
 - block:
     - name: Download
       get_url:
-        url: "{{ adoptopenjdk['versions'][java_version].url }}"
+        url: "{{ java['versions'][java_version].url }}"
         dest: "/tmp/{{ java_version|c2platform.core.java_folder }}"
-        checksum: "sha256:{{ adoptopenjdk['versions'][java_version].checksum }}"
+        checksum: "sha256:{{ java['versions'][java_version].checksum }}"
 
     - name: Create java_home
       file:

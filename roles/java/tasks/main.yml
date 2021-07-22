@@ -1,23 +1,23 @@
 ---
 - name: Java install fact
   set_fact:
-    adoptopenjdk_versions: "{{ [adoptopenjdk['version']] + adoptopenjdk['version_alternatives'] }}"
+    java_versions: "{{ [java['version']] + java['version_alternatives'] }}"
 
 - name: Install Java
   include: install.yml
-  with_items: "{{ adoptopenjdk_versions }}"
+  with_items: "{{ java_versions }}"
   loop_control:
     loop_var: java_version
 
 - name: JDK in etc profile
   copy:
-    content: "export JAVA_HOME={{ adoptopenjdk['version']|c2platform.core.java_home }}"
+    content: "export JAVA_HOME={{ java['version']|c2platform.core.java_home }}"
     dest: /etc/profile.d/jdk.sh
     mode: 0644
 
 - name: Import cert bundles
   include: bundles.yml
-  with_items: "{{ adoptopenjdk_versions }}"
+  with_items: "{{ java_versions }}"
   loop_control:
     loop_var: java_version
-  when: adoptopenjdk['versions'][java_version]['bundles'] is defined
+  when: java['versions'][java_version]['bundles'] is defined

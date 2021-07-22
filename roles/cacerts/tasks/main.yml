@@ -18,10 +18,10 @@
 
 - name: "Import certs for JDK"
   include: jdk.yml
-  with_items: "{{ adoptopenjdk.versions }}"
-  when: adoptopenjdk is defined and adoptopenjdk.versions is defined
+  with_items: "{{ java.versions }}"
+  when: java is defined and java.versions is defined
   vars:
-    jdk: "{{ adoptopenjdk.versions[jdk_version_no] }}"
+    jdk: "{{ java.versions[jdk_version_no] }}"
   loop_control:
     loop_var: jdk_version_no
 

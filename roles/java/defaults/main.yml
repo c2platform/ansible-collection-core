@@ -1,5 +1,5 @@
 ---
-adoptopenjdk:
+java:
   version: jdk11_0411_oj9
   version_alternatives: []
   versions:

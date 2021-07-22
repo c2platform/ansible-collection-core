@@ -1,8 +1,8 @@
 ---
 - name: Bundle fact
   set_fact:
-    bundles: "{{ adoptopenjdk['versions'][java_version]['bundles'] }}"
-    jdk: "{{ adoptopenjdk['versions'][java_version] }}"
+    bundles: "{{ java['versions'][java_version]['bundles'] }}"
+    jdk: "{{ java['versions'][java_version] }}"
 
 - name: Download bundle
   get_url:
