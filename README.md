@@ -5,4 +5,5 @@ C2 Platform generic roles that are used by all or some other roles. These roles 
 # TODO
 
 1. Remove / move dependency on c2platform.platform.monit and c2platform.test.swid.
+2. 
 
