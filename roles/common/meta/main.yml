@@ -1,6 +1,6 @@
 ---
 dependencies:
-  - {role: ansible-apt,             tags: apt, when: ansible_os_family == 'Debian' and common_ansible_apt|default(False) }
+  # - {role: ansible-apt,             tags: apt, when: ansible_os_family == 'Debian' and common_ansible_apt|default(False) }
   - {role: bootstrap,               tags: ansible }
   - {role: lcm,                     tags: ansible }
   - {role: lvm,                     tags: lvm }
