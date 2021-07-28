@@ -43,4 +43,4 @@
   with_items: "{{ common_git_repos }}"
   vars:
     common_git_repo: "{{ common_git_repos[item] }}"
-  when: common_git_repos is defined
+  when: common_git_repos is defined and common_git_repos_enable|default(False)
