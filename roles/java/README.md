@@ -8,6 +8,7 @@ A simple Ansible Role that installs Java on Linux servers.
 - [Role Variables](#role-variables)
   - [Install](#install)
   - [Bundles](#bundles)
+  - [Trusted sites](#trusted-sites)
   - [Etc profile.d JAVA_HOME](#etc-profiled-java_home)
 - [Dependencies](#dependencies)
 - [Example Playbook](#example-playbook)
@@ -48,6 +49,22 @@ java:
 ### Bundles
 
 Using `bundles` as shown above it is possible to import certificates and CA bundles.
+
+### Trusted sites
+
+Sites can be trusted by importing certificates using `java_trusted_sites` for example
+
+```yaml
+java_trusted_sites:
+  certs:
+    acs:
+      alias: example1
+      uri: example.com:443
+    acs1:
+      alias: example2
+      uri: example2.com:443
+  notify: restart tomcat instance
+```
 
 ### Etc profile.d JAVA_HOME
 

@@ -1,0 +1,61 @@
+---
+- name: Check JDK keystore
+  stat:
+    path: "{{ java_version|c2platform.core.java_keystore(jdk) }}"
+  register: keystore
+
+- name: Download trusted site cert
+  shell: >
+    echo -n | openssl s_client -connect {{ java_trusted_sites['certs'][site]['uri'] }}
+    | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p'
+  with_items: "{{ java_trusted_sites['certs'] }}"
+  loop_control:
+    loop_var: site
+  changed_when: False
+  register: trusted_sites_download
+  when: keystore.stat.exists
+
+- name:
+  set_java_trusted_sites_facts:
+    trusted_sites: "{{ java_trusted_sites }}"
+    trusted_sites_download: "{{ trusted_sites_download }}"
+  when: keystore.stat.exists
+
+- name: Write cert cache files
+  copy:
+    content: "{{ java_trusted_sites['certs'][site]['cert'] }}"
+    dest: "/var/tmp/trusted-cert-{{ java_version }}-{{ java_trusted_sites['certs'][site]['uri']|checksum }}"
+  with_items: "{{ java_trusted_sites['certs'] }}"
+  loop_control:
+    loop_var: site
+  register: trusted_sites_cache_files
+  when: keystore.stat.exists
+
+- block:
+    - name: Remove trusted cert
+      java_cert:
+        cert_alias: "{{ java_trusted_sites['certs'][site]['alias'] }}"
+        cert_path: "/var/tmp/trusted-cert-{{ java_version }}-{{ java_trusted_sites['certs'][site]['uri']|checksum }}"
+        keystore_path: "{{ java_version|c2platform.core.java_keystore(jdk) }}"
+        keystore_pass: "{{ jdk['keystore_pass']|default('changeit') }}"
+        executable: "{{ java_version|c2platform.core.java_keytool(jdk) }}"
+        state: absent
+      with_items: "{{ java_trusted_sites['certs'] }}"
+      loop_control:
+        loop_var: site
+      ignore_errors: yes
+
+    - name: Add trusted cert
+      java_cert:
+        cert_alias: "{{ java_trusted_sites['certs'][site]['alias'] }}"
+        cert_path: "/var/tmp/trusted-cert-{{ java_version }}-{{ java_trusted_sites['certs'][site]['uri']|checksum }}"
+        keystore_path: "{{ java_version|c2platform.core.java_keystore(jdk) }}"
+        keystore_pass: "{{ jdk['keystore_pass']|default('changeit') }}"
+        executable: "{{ java_version|c2platform.core.java_keytool(jdk) }}"
+        state: present
+      with_items: "{{ java_trusted_sites['certs'] }}"
+      loop_control:
+        loop_var: site
+      ignore_errors: yes
+      notify: "{{ java_trusted_sites['notify']|default(omit) }}"
+  when: trusted_sites_cache_files.changed and keystore.stat.exists

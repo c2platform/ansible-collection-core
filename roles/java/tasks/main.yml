@@ -15,9 +15,16 @@
     dest: /etc/profile.d/jdk.sh
     mode: 0644
 
-- name: Import cert bundles
+- name: Import bundles
   include: bundles.yml
   with_items: "{{ java_versions }}"
   loop_control:
     loop_var: java_version
   when: java['versions'][java_version]['bundles'] is defined
+
+- name: Import trusted sites
+  include: sites.yml
+  with_items: "{{ java_versions }}"
+  loop_control:
+    loop_var: java_version
+  when: java_trusted_sites is defined
