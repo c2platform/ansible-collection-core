@@ -27,4 +27,4 @@
   with_items: "{{ java_versions }}"
   loop_control:
     loop_var: java_version
-  when: java_trusted_sites is defined
+  when: java_trusted_sites is defined and java_trusted_sites_enabled|default(False)

@@ -55,6 +55,7 @@ Using `bundles` as shown above it is possible to import certificates and CA bund
 Sites can be trusted by importing certificates using `java_trusted_sites` for example
 
 ```yaml
+java_trusted_sites_enabled: yes
 java_trusted_sites:
   certs:
     acs:
