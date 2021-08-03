@@ -71,6 +71,8 @@ java_trusted_sites:
 
 For the default java a etc profile `/etc/profile/jdk.sh` is created that contains the `JAVA_HOME` 
 
+java_home_etc_profile
+
 ## Dependencies
 
 ## Example Playbook

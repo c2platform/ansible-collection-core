@@ -1,26 +1,26 @@
 ---
 - name: Check installed
   stat:
-    path: "{{ java_version|c2platform.core.java_home }}/bin/java"
+    path: "{{ java_versions[jiav]['java_home'] }}/bin/java"
   register: jdk_installed
 
 - block:
     - name: Download
       get_url:
-        url: "{{ java['versions'][java_version].url }}"
-        dest: "/tmp/{{ java_version|c2platform.core.java_folder }}"
-        checksum: "sha256:{{ java['versions'][java_version].checksum }}"
+        url: "{{ java_versions[jiav]['url'] }}"
+        dest: "/tmp/{{ java_versions[jiav]['java_home']|basename }}"
+        checksum: "sha256:{{ java_versions[jiav]['checksum'] }}"
 
     - name: Create java_home
       file:
-        path: "{{ java_version|c2platform.core.java_home }}"
+        path: "{{ java_versions[jiav]['java_home'] }}"
         state: directory
         mode: 0755
 
     - name: Unarchive
       unarchive:
-        src: "/tmp/{{ java_version|c2platform.core.java_folder }}"
-        dest: "{{ java_version|c2platform.core.java_home }}"
+        src: "/tmp/{{ java_versions[jiav]['java_home']|basename }}"
+        dest: "{{ java_versions[jiav]['java_home'] }}"
         extra_opts: '--strip-components=1'
         remote_src: yes
   when: not jdk_installed.stat.exists

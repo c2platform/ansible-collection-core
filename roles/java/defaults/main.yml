@@ -1,8 +1,9 @@
 ---
-java:
-  version: jdk11_0411_oj9
-  version_alternatives: []
-  versions:
+# module java_facts creates following facts:
+# java_home, java_keytool, java_keystore
+java_version: jdk11_0411_oj9
+java_version_alternatives: []
+java_versions:
     jdk8_8u292b10_hs:
       url: https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u292-b10/OpenJDK8U-jdk_x64_linux_hotspot_8u292b10.tar.gz
       checksum: 0949505fcf42a1765558048451bb2a22e84b3635b1a31dd6191780eeccaa4ada
@@ -10,3 +11,11 @@ java:
     jdk11_0411_oj9:
       url: https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.4%2B11_openj9-0.15.1/OpenJDK11U-jdk_x64_linux_openj9_11.0.4_11_openj9-0.15.1.tar.gz
       checksum: b1099cccc80a3f434728c9bc3b8a90395793b625f4680ca05267cf635143d64d
+    openjdk-11-jdk:
+      # name: openjdk-11-jdk
+      folder: java-11-openjdk-amd64 # in /usr/lib/jvm
+      package: yes
+    openjdk-8-jdk:
+      package: yes
+      folder: java-8-openjdk-amd64
+      keystore: jre/lib/security/cacerts

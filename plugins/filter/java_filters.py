@@ -37,6 +37,13 @@ def java_path(java_home, rel_path):
     return os.path.join(os.path.sep, java_home, rel_path)
 
 
+def java_package_install(java_version):
+    if 'package' in java_version:
+        if java_version['package']:
+            return True
+    return False
+
+
 class FilterModule(object):
     """java filters."""
 
@@ -46,4 +53,5 @@ class FilterModule(object):
             'java_home': java_home,
             'java_keystore': java_keystore,
             'java_keytool': java_keytool,
+            'java_package_install': java_package_install
         }

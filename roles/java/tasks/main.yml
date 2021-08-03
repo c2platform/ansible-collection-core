@@ -1,26 +1,36 @@
 ---
-- name: Java install fact
-  set_fact:
-    java_versions: "{{ [java['version']] + java['version_alternatives'] }}"
+- name: Set additional java facts
+  java_facts:
+    version: "{{ java_version }}"
+    versions: "{{ java_versions }}"
+    alternatives: "{{ java_version_alternatives }}"
 
 - name: Install Java
   include: install.yml
-  with_items: "{{ java_versions }}"
+  with_items: "{{ java_install_archives }}"
   loop_control:
-    loop_var: java_version
+    loop_var: jiav
 
-- name: JDK in etc profile
+- name: Install Java ( package )
+  package:
+    name:  "{{ java_versions[item]['name']|default(item) }}"
+  with_items: "{{ java_install_packages }}"
+
+- name: Create etc profile
   copy:
-    content: "export JAVA_HOME={{ java['version']|c2platform.core.java_home }}"
-    dest: /etc/profile.d/jdk.sh
+    content: |
+      export JAVA_HOME={{ java_versions[java_version]['java_home'] }}
+      export PATH=$JAVA_HOME/bin:$PATH
+    dest: /etc/profile.d/java.sh
     mode: 0644
+  when: java_home_etc_profile|default(False)
 
 - name: Import bundles
   include: bundles.yml
-  with_items: "{{ java_versions }}"
+  with_items: "{{ java_install_archives + java_install_packages }}"
   loop_control:
-    loop_var: java_version
-  when: java['versions'][java_version]['bundles'] is defined
+    loop_var: bundle_java_version
+  when: java_versions[java_version]['bundles'] is defined
 
 - name: Import trusted sites
   include: sites.yml
