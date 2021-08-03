@@ -1,17 +1,17 @@
 ---
 - name: Check JDK keystore
   stat:
-    path: "{{ jdk_version_no|c2platform.core.java_keystore(jdk) }}"
+    path: "{{ jdk['keystore'] }}"
   register: keystore
 
 - block:
     - name: "Import bundles in JDK cacerts"
       java_cert:
-        cert_alias: "{{ jdk['name'] }}"
-        cert_path: "/tmp/{{ jdk['url']|basename }}"
-        keystore_path: "{{ jdk_version_no|c2platform.core.java_keystore(jdk) }}"
+        cert_alias: "{{ jdk_version_no }}"
+        cert_path: "{{ item['url']|c2platform.core.ansible_cache_file }}"
+        keystore_path: "{{ jdk['keystore'] }}"
         keystore_pass: "{{ jdk['keystore_pass']|default('changeit') }}"
-        executable: "{{ jdk_version_no|c2platform.core.java_keytool(jdk) }}"
+        executable: "{{ jdk['keytool'] }}"
         state: present
       with_items: "{{ cacerts_import_certs_urls }}"
       ignore_errors: yes
@@ -22,13 +22,13 @@
         cert_alias: "{{ item['name'] }}"
         cert_url: "{{ item['url'] }}"
         cert_port: "{{ item['port'] }}"
-        keystore_path: "{{ jdk_version_no|c2platform.core.java_keystore(jdk) }}"
+        keystore_path: "{{ jdk['keystore'] }}"
         keystore_pass: "{{ jdk['keystore_pass']|default('changeit') }}"
-        executable: "{{ jdk_version_no|c2platform.core.java_keytool(jdk) }}"
+        executable: "{{ jdk['keytool'] }}"
         state: present
       with_items: "{{ cacerts_trusted_sites }}"
       notify: "{{ item['notify']|default(omit) }}"
-      register: jdk_trusted_sites # cmd, msg, rc
+      #register: jdk_trusted_sites # cmd, msg, rc
       ignore_errors: yes
       # environment: "{{ cacerts_java_cert_environment|default(omit) }}" # TODO
   when: keystore.stat.exists
