@@ -2,19 +2,12 @@
 - name: Get roles
   set_fact: cacerts_roles_node="{{ cacerts_roles_supported | intersect(ansible_role_names_cleaned) }}"
 
-- debug:
-    msg: "ansible_role_names_cleaned: {{ ansible_role_names_cleaned }}"
-
 - name: Set additional java facts
   java_facts:
     version: "{{ java_version }}"
     versions: "{{ java_versions }}"
     alternatives: "{{ java_version_alternatives }}"
   when: '"java" in ansible_role_names_cleaned'
-
-#- copy: # debug
-#    content: "{{ {'java_versions': java_versions }|to_yaml }}"
-#    dest: /vagrant/java_versions_cacerts.yml
 
 - name: "Download for import"
   get_url:
