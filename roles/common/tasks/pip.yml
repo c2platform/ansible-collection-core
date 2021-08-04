@@ -1,8 +1,4 @@
 ---
-- name: Debugging AWX
-  fail:
-    msg: "debugging AWX"
-
 - name: Pip conf
   template:
     src: pip.conf.j2
