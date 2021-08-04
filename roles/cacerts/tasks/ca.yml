@@ -6,6 +6,11 @@
     path: "{{ cacerts_dir_domain }}/ca-{{ domain }}.key"
   register: cacerts_dir_domain_key
 
+- name: Cryptography package
+  pip:
+    name: cryptography
+    state: present
+
 - block:
     - name: Create CA dir
       file:
