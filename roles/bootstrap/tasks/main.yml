@@ -3,3 +3,6 @@
   package:
     name: "{{ bootstrap_packages_extra }}"
     state: present
+
+- include: pip.yml
+- include: packages.yml

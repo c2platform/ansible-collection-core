@@ -1,6 +1,4 @@
 ---
-- include: packages.yml
-- include: pip.yml
 - include: mounts.yml
 - include: user.yml
   when: common_ansible_user_create
