@@ -1,7 +1,7 @@
 ---
 - name: Check JDK keystore
   stat:
-    path: "{{ java_version|c2platform.core.java_keystore(jdk) }}"
+    path: "{{ java_version_site|c2platform.core.java_keystore(jdk) }}"
   register: keystore
 
 - name: Download trusted site cert
@@ -24,7 +24,7 @@
 - name: Write cert cache files
   copy:
     content: "{{ java_trusted_sites['certs'][site]['cert'] }}"
-    dest: "/var/tmp/trusted-cert-{{ java_version }}-{{ java_trusted_sites['certs'][site]['uri']|checksum }}"
+    dest: "/var/tmp/trusted-cert-{{ java_version_site }}-{{ java_trusted_sites['certs'][site]['uri']|checksum }}"
   with_items: "{{ java_trusted_sites['certs'] }}"
   loop_control:
     loop_var: site
@@ -35,10 +35,10 @@
     - name: Remove trusted cert
       java_cert:
         cert_alias: "{{ java_trusted_sites['certs'][site]['alias'] }}"
-        cert_path: "/var/tmp/trusted-cert-{{ java_version }}-{{ java_trusted_sites['certs'][site]['uri']|checksum }}"
-        keystore_path: "{{ java_version|c2platform.core.java_keystore(jdk) }}"
+        cert_path: "/var/tmp/trusted-cert-{{ java_version_site }}-{{ java_trusted_sites['certs'][site]['uri']|checksum }}"
+        keystore_path: "{{ java_version_site|c2platform.core.java_keystore(jdk) }}"
         keystore_pass: "{{ jdk['keystore_pass']|default('changeit') }}"
-        executable: "{{ java_version|c2platform.core.java_keytool(jdk) }}"
+        executable: "{{ java_version_site|c2platform.core.java_keytool(jdk) }}"
         state: absent
       with_items: "{{ java_trusted_sites['certs'] }}"
       loop_control:
@@ -48,10 +48,10 @@
     - name: Add trusted cert
       java_cert:
         cert_alias: "{{ java_trusted_sites['certs'][site]['alias'] }}"
-        cert_path: "/var/tmp/trusted-cert-{{ java_version }}-{{ java_trusted_sites['certs'][site]['uri']|checksum }}"
-        keystore_path: "{{ java_version|c2platform.core.java_keystore(jdk) }}"
+        cert_path: "/var/tmp/trusted-cert-{{ java_version_site }}-{{ java_trusted_sites['certs'][site]['uri']|checksum }}"
+        keystore_path: "{{ java_version_site|c2platform.core.java_keystore(jdk) }}"
         keystore_pass: "{{ jdk['keystore_pass']|default('changeit') }}"
-        executable: "{{ java_version|c2platform.core.java_keytool(jdk) }}"
+        executable: "{{ java_version_site|c2platform.core.java_keytool(jdk) }}"
         state: present
       with_items: "{{ java_trusted_sites['certs'] }}"
       loop_control:
