@@ -36,6 +36,11 @@
     loop_var: regex_file
   when: common_regex_files is defined
 
+- debug:
+    msg: |
+     common_git_repos: {{ common_git_repos }}
+     common_git_repos_enable: {{ common_git_repos_enable }}
+
 - name: Git repos
   include: git.yml
   with_items: "{{ common_git_repos }}"
