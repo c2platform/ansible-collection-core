@@ -4,3 +4,6 @@ index-url = {{ common_pip_repository_url_index|default(common_pip_repository_url
 {% if common_pip_ca_bundle_url is defined %}
 cert = {{ common_pip_ca_trust_store }}/{{ common_pip_ca_bundle_url | basename }}
 {% endif %}
+{% if common_pip_trusted_host is defined %}
+trusted-host = {{ common_pip_trusted_host }}
+{% endif %}
