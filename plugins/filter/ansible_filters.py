@@ -25,11 +25,32 @@ def ansible_cache_file(url):
                         bn2 + '-' + url_hash + '.' + ename)
 
 
+# Return index of host in group
+def inventory_hostname_group_index(inventory_hostname, group_name, groups):
+    if group_name in groups:
+        if inventory_hostname in groups[group_name]:
+            return groups[group_name].index(inventory_hostname) + 1
+        else:
+            return None
+    else:
+        return None
+
+
+# Return number of hostnames in group
+def group_length(group_name, groups):
+    if group_name in groups:
+        return len(groups[group_name])
+    else:
+        return None
+
+
 class FilterModule(object):
     """ansible filters."""
 
     def filters(self):
         return {
             'ansible_environment': ansible_environment,
-            'ansible_cache_file': ansible_cache_file
+            'ansible_cache_file': ansible_cache_file,
+            'inventory_hostname_group_index': inventory_hostname_group_index,
+            'group_length': group_length
         }
