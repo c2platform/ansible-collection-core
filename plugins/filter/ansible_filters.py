@@ -44,6 +44,14 @@ def group_length(group_name, groups):
         return None
 
 
+# Return number of hostnames in group
+def inventory_hostname_vars(inventory_hostname, vars, default_vars=[]):
+    if inventory_hostname in vars:
+        return vars[inventory_hostname]
+    else:
+        return default_vars
+
+
 class FilterModule(object):
     """ansible filters."""
 
@@ -52,5 +60,6 @@ class FilterModule(object):
             'ansible_environment': ansible_environment,
             'ansible_cache_file': ansible_cache_file,
             'inventory_hostname_group_index': inventory_hostname_group_index,
-            'group_length': group_length
+            'group_length': group_length,
+            'inventory_hostname_vars': inventory_hostname_vars
         }
