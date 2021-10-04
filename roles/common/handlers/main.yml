@@ -4,3 +4,16 @@
     daemon_reload: true
   changed_when: false
   ignore_errors: true
+- name: APT update
+  apt:
+    update_cache: true
+    cache_valid_time: 3600
+    force_apt_get: true
+  when: ansible_os_family == "Debian"
+  listen: Update CA certificates
+
+- name: Update CA certificates
+  shell: /usr/sbin/update-ca-certificates
+  when: ansible_os_family == "Debian"
+  when: ansible_os_family == "Debian"
+  listen: Update CA certificates

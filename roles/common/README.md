@@ -8,6 +8,7 @@
 - [Role Variables](#role-variables)
     - [Optional Ansible User](#optional-ansible-user)
     - [Optional AWX Ansible Vault](#optional-awx-ansible-vault)
+    - [common_regex_files](#common_regex_files)
 - [Dependencies](#dependencies)
 - [Example Playbook](#example-playbook)
 
@@ -53,6 +54,28 @@ Any file you then put in this directory will then be included when this role run
 Note: when using AWX the `inventory_dir` is not what you might expect. It is not for example the same as the location in source control.
 
 TODO common_secrets_no_log
+
+### common_regex_files
+
+Use dict `common_regex_files` to change arbitrary files and trigger handlers using optional `notify` attribute. 
+
+```yaml
+common_regex_files:
+  sshd_config:
+    path: /etc/ssh/sshd_config
+    regex:
+      - search: ^.*ClientAliveInterval.*$
+        replace: "#ClientAliveInterval 0"
+      - search: ^.*ClientAliveCountMax.*$
+        replace: "#ClientAliveCountMax 3"
+    notify: restart haproxy
+  ca_certificates:
+    path: /etc/ca-certificates.conf
+    regex:
+      - search: ^.*mozilla/DST_Root_CA_X3.crt$
+        replace: "!mozilla/DST_Root_CA_X3.crt"
+    notify: Update CA certificates
+```
 
 ## Dependencies
 
