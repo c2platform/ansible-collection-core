@@ -1,0 +1,10 @@
+---
+- name: PostgreSQL client repo
+  yum:
+    name: "{{ postgresql_client_repos[ansible_os_family][ansible_distribution_major_version]['url'] }}"
+    state: present
+
+- name: Install PostgreSQL client
+  package:
+    name: '{{ postgresql_client_versions[postgresql_client_version] }}'
+    state: present
