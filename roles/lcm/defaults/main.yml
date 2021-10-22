@@ -8,5 +8,6 @@ lcm_roles:
   - guacamole
   - awx
   - myapp
+  - keycloak
 
 lcm_write_version_file: no
