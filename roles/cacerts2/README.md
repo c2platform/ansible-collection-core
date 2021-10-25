@@ -34,7 +34,7 @@ To create the private key, cert etc of the CA the dict `cacerts2_ca_domain` is u
 
 ```yaml
 cacerts2_ca_domain:
-  common_name: example_com
+  common_name: c2d
   create: ['key','csr', 'crt', 'p12', 'pem']
   cipher: auto
   passphrase: supersecure # vault
