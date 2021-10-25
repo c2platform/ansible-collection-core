@@ -1,0 +1,20 @@
+---
+- set_fact:
+   cacerts2_certificates: "{{ hostvars[inventory_hostname][cacerts2_role_name + '_' + 'cacerts2_certificates'] }}"
+
+- name: Set various certificate facts
+  c2platform.core.set_certificate_facts:
+    certificates: "{{ cacerts2_certificates }}"
+    ca_server: "{{ cacerts2_ca_server }}"
+    ca_dir: "{{ cacerts2_ca_dir }}"
+    ca_domain: "{{ cacerts2_ca_domain }}"
+    hostname: "{{ ansible_hostname }}"
+    role_name: "{{ cacerts2_role_name }}"
+
+- set_fact:
+   cacerts2_certificates: "{{ hostvars[inventory_hostname][cacerts2_role_name + '_' + 'cacerts2_certificates'] }}"
+
+- include_tasks: certs/certs_group.yml
+  with_items: "{{ cacerts2_certificates }}"
+  loop_control:
+    loop_var: cacerts2_role_name

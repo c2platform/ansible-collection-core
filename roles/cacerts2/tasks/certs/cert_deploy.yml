@@ -1,0 +1,30 @@
+---
+- name: Copy to controle node ( fetch ) # from caserver
+  ansible.builtin.fetch:
+    src: "{{ cacerts2_certificate['create'][ext] }}"
+    dest: /tmp/
+    flat: yes
+  with_items: "{{ cacerts2_certificate['deploy'] }}"
+  loop_control:
+    loop_var: ext
+  # changed_when: cert_crt.changed or cert_crt.changed
+  delegate_to: "{{ cacerts2_ca_server }}"
+
+- name: Stat dir
+  stat:
+    path: "{{ cacerts2_certificate['deploy'][ext]['dir'] }}"
+  with_items: "{{ cacerts2_certificate['deploy'] }}"
+  loop_control:
+    loop_var: ext
+  register: dest_parent
+
+- name: Copy file
+  copy:
+    src: "/tmp/{{ cacerts2_certificate['create'][ext]|basename }}"
+    dest: "{{ cacerts2_certificate['deploy'][ext]['dest'] }}"
+    owner: "{{ cacerts2_certificate['deploy'][ext]['owner']|default(omit) }}"
+    group: "{{ cacerts2_certificate['deploy'][ext]['group']|default(omit) }}"
+    mode: "{{ cacerts2_certificate['deploy'][ext]['mode']|default(omit) }}"
+  with_items: "{{ cacerts2_certificate['deploy'] }}"
+  loop_control:
+    loop_var: ext

@@ -1,0 +1,7 @@
+---
+cacerts2_overwrite: no
+cacerts2_ca_dir: /opt/ca
+cacerts2_ca_server: mynode
+cacerts2_name_constraints_permitted:
+  - DNS
+  - IP
