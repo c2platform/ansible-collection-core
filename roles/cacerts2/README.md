@@ -1,8 +1,6 @@
 # Ansible Role cacerts2
 
-Ansible role that allows you to create / manage your [own small CA](https://docs.ansible.com/ansible/latest/collections/community/crypto/docsite/guide_ownca.html). Note: certificates are created, installed on nodes by other C2 Platform roles by include tasks from [certs.yml](./tasks/certs.yml) from this role. See for example:
-
-* [certs.yml](https://github.com/c2platform/ansible-collection-mw/tree/master/roles/apache/tasks/cert.yml) in [c2platform.mw.apache](https://github.com/c2platform/ansible-collection-mw/tree/master/roles/apache/)
+Ansible role that allows you to create / manage your [own small CA](https://docs.ansible.com/ansible/latest/collections/community/crypto/docsite/guide_ownca.html). Note: certificates are created, installed on nodes by other C2 Platform roles by include tasks from [certs.yml](./tasks/certs.yml) from this role. See for example [certs.yml](https://github.com/c2platform/ansible-collection-mw/tree/master/roles/apache/tasks/cert.yml) in [c2platform.mw.apache](https://github.com/c2platform/ansible-collection-mw/tree/master/roles/apache/).
 
 <!-- MarkdownTOC levels="2,3" autolink="true" -->
 
