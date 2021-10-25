@@ -183,7 +183,7 @@ On the CA server this will create for example
     cacerts2_ca_server: "{{ groups['cacerts_server'][0] }}"
     cacerts2_ca_dir: /vagrant/.ca
     cacerts2_ca_domain:
-      common_name: example_com
+      common_name: c2d
       create: ['key','csr', 'crt', 'p12', 'pem']
       cipher: auto
       passphrase: supersecure # vault
