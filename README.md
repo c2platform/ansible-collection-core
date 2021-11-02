@@ -5,4 +5,4 @@ C2 Platform generic roles that are used by all or some other roles. These roles 
 ## Roles
 
 * [apt_repo](./roles/apt_repo) add APT keys, repositories.
-* 
+* [files](./roles/files) manage files, directories, ACL.
