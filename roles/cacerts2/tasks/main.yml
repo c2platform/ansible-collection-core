@@ -1,0 +1,59 @@
+---
+- name: Set CA facts
+  c2platform.core.set_certificate_facts:
+    ca_server: "{{ cacerts2_ca_server }}"
+    ca_dir: "{{ cacerts2_ca_dir }}"
+    ca_domain: "{{ cacerts2_ca_domain }}"
+    hostname: "{{ ansible_hostname }}"
+
+- stat:
+    path: "{{ cacerts2_ca_domain['key'] }}"
+  register: cacerts2_ca_private_key_path_stat
+
+- block:
+    - name: Create CA dir
+      file:
+        path: "{{ cacerts2_ca_domain['dir'] }}"
+        state: directory
+        mode: 0700
+        recurse: yes
+
+    - name: Create CA key
+      community.crypto.openssl_privatekey:
+        path: "{{ cacerts2_ca_domain['key'] }}"
+        force: "{{ cacerts2_overwrite|default(False) }}"
+        passphrase: "{{ cacerts2_ca_domain['passphrase']|default(omit) }}"
+        cipher: "{{ cacerts2_ca_domain['cipher']|default('omit') }}"
+      register: ca_key
+
+    - name: Create the CA CSR
+      community.crypto.openssl_csr:
+        path: "{{ cacerts2_ca_domain['csr'] }}"
+        privatekey_path: "{{ ca_key.filename }}"
+        privatekey_passphrase: "{{ cacerts2_ca_domain['passphrase']|default(omit) }}"
+        # constraints and usage required by CA
+        basic_constraints_critical: true
+        basic_constraints:
+          - CA:TRUE
+          - pathlen:0
+        key_usage:
+          - digitalSignature
+          - cRLSign
+          - keyCertSign
+        extended_key_usage:
+          - clientAuth
+          - serverAuth
+        common_name: "{{ cacerts2_ca_domain['common_name'] }}"
+        force: "{{cacerts2_overwrite|default(False)}}"
+      register: ca_csr
+
+    - name: Sign the CA CSR
+      openssl_certificate:
+        path: "{{ cacerts2_ca_domain['crt'] }}"
+        csr_path: "{{ ca_csr.filename }}"
+        privatekey_path: "{{ ca_key.filename }}"
+        privatekey_passphrase: "{{ cacerts2_ca_domain['passphrase']|default(omit) }}"
+        provider: selfsigned
+        force: "{{ cacerts2_overwrite|default(False) }}"
+      register: ca_crt
+  when: not cacerts2_ca_private_key_path_stat.stat.exists

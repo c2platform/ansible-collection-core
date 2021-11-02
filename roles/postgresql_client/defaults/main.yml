@@ -6,5 +6,8 @@ postgresql_client_repos:
     '7':
       url: https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
 
-postgresql_client_versions: 
+postgresql_client_versions:
   9.6: ['postgresql96']
+  10:
+    package: postgresql-client
+    version: 10+190ubuntu0.1

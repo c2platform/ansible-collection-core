@@ -1,0 +1,10 @@
+---
+- include_tasks: cert.yml
+  with_items: "{{ cacerts2_certificates }}"
+  loop_control:
+    loop_var: cacerts2_certificate
+
+- include_tasks: cert_deploy.yml
+  with_items: "{{ cacerts2_certificates }}"
+  loop_control:
+    loop_var: cacerts2_certificate

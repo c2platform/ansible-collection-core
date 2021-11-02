@@ -4,5 +4,21 @@ C2 Platform generic roles that are used by all or some other roles. These roles 
 
 ## Roles
 
+* [cacerts2](./roles/cacerts2) create your [own small CA](https://docs.ansible.com/ansible/latest/collections/community/crypto/docsite/guide_ownca.html).
 * [apt_repo](./roles/apt_repo) add APT keys, repositories.
 * [files](./roles/files) manage files, directories, ACL.
+
+## Plugins
+
+Module plugins:
+
+* 
+
+Filter plugins:
+
+*
+
+## TODO
+
+1. Remove / move dependency on c2platform.platform.monit and c2platform.test.swid.
+2. 

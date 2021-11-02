@@ -1,0 +1,41 @@
+---
+- name: Copy to controle node ( fetch ) # from caserver
+  ansible.builtin.fetch:
+    src: "{{ cacerts2_certificate['create'][ext] }}"
+    dest: /tmp/
+    flat: yes
+  with_items: "{{ cacerts2_certificate['deploy'] }}"
+  loop_control:
+    loop_var: ext
+  # changed_when: cert_crt.changed or cert_crt.changed
+  delegate_to: "{{ cacerts2_ca_server }}"
+
+- name: Stat parent dir
+  stat:
+    path: "{{ cacerts2_certificate['deploy'][ext]['dir'] }}"
+  with_items: "{{ cacerts2_certificate['deploy'] }}"
+  loop_control:
+    loop_var: ext
+  register: _dirs
+
+- name: Create parent dir
+  file:
+    path: "{{ cacerts2_certificate['deploy'][ext]['dir'] }}"
+    state: directory
+    mode: "{{ cacerts2_certificate['deploy'][ext]['mode-parent-dir']|default('700') }}"
+    recurse: "{{ cacerts2_certificate['deploy'][ext]['recurse-parent-dir']|default(omit) }}"
+  with_items: "{{ cacerts2_certificate['deploy'] }}"
+  loop_control:
+    loop_var: ext
+  when: not _dirs['results']|selectattr('ext', 'equalto', ext)|map(attribute='stat')|map(attribute='exists')|list|first
+
+- name: Copy file
+  copy:
+    src: "/tmp/{{ cacerts2_certificate['create'][ext]|basename }}"
+    dest: "{{ cacerts2_certificate['deploy'][ext]['dest'] }}"
+    owner: "{{ cacerts2_certificate['deploy'][ext]['owner']|default(omit) }}"
+    group: "{{ cacerts2_certificate['deploy'][ext]['group']|default(omit) }}"
+    mode: "{{ cacerts2_certificate['deploy'][ext]['mode']|default('600') }}"
+  with_items: "{{ cacerts2_certificate['deploy'] }}"
+  loop_control:
+    loop_var: ext
