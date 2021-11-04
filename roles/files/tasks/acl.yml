@@ -2,7 +2,7 @@
 - name: Create ACL
   acl:
     path: "{{ item['path'] }}"
-    entity: "{{ item['entity'] }}"
+    entity: "{{ item['entity']|default(omit) }}"
     etype: "{{ item['etype'] }}"
     permissions: "{{ item['permission'] }}"
     default: "{{ item['default']|default(omit) }}"
