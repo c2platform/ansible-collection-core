@@ -10,11 +10,13 @@
   with_items: "{{ java_install_archives }}"
   loop_control:
     loop_var: jiav
+  when: java_versions[jiav]['install']|default(True)
 
 - name: Install Java ( package )
   package:
     name:  "{{ java_versions[item]['name']|default(item) }}"
   with_items: "{{ java_install_packages }}"
+  when: java_versions[item]['install']|default(True)
 
 - name: Create etc profile
   copy:
