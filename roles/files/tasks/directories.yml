@@ -1,0 +1,12 @@
+---
+- name: Create directory
+  file:
+    path: "{{ item['path'] }}"
+    state: "{{ item['state']|default('directory') }}"
+    owner: "{{ item['owner']|default(omit) }}"
+    group: "{{ item['group']|default(omit) }}"
+    recurse: "{{ item['recurse']|default(omit) }}"
+    src: "{{ item['src']|default(omit) }}"
+    attributes: "{{ item['attributes']|default(omit) }}"
+    mode: "{{ item['mode']|default('0755') }}"
+  with_items: "{{ common_directories_set }}"

@@ -49,3 +49,13 @@
         force: "{{ cacerts_overwrite|default(False) }}"
       register: ca_crt
   when: not cacerts_dir_domain_key.stat.exists
+
+- name: Generate a CRL
+  community.crypto.x509_crl:
+    path: "{{ cacerts_dir_domain }}/ca-{{ domain }}.crl"
+    privatekey_path: "{{ cacerts_dir_domain }}/ca-{{ domain }}.key"
+    issuer:
+      CN: "{{ domain }}"
+    last_update: "+0s"
+    next_update: "+520w"
+    revoked_certificates: "{{ cacerts_revoked_certs|default([]) }}"

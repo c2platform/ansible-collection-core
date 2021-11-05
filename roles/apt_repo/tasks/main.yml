@@ -1,0 +1,25 @@
+---
+- name: Add APT key
+  ansible.builtin.apt_key:
+    id: "{{ item['id']|default(omit) }}"
+    keyserver: "{{ item['keyserver']|default(omit) }}"
+    url: "{{ item['url']|default(omit) }}"
+    data: "{{ item['data']|default(omit) }}"
+    keyring: "{{ item['keyring']|default(omit) }}"
+    file: "{{ item['file']|default(omit) }}"
+    validate_certs: "{{ item['validate_certs']|default(omit) }}"
+    state: "{{ item['state']|default(omit) }}"
+  with_items: "{{ common_apt_keys }}"
+
+- name: Add APT repository
+  ansible.builtin.apt_repository:
+    repo: "{{ item['repo'] }}"
+    filename: "{{ item['filename']|default(omit) }}"
+    mode: "{{ item['mode']|default(omit) }}"
+    update_cache: "{{ item['update_cache']|default(omit) }}"
+    update_cache_retries: "{{ item['update_cache_retries']|default(omit) }}"
+    update_cache_retry_max_delay: "{{ item['update_cache_retry_max_delay']|default(omit) }}"
+    install_python_apt: "{{ item['install_python_apt']|default(omit) }}"
+    validate_certs: "{{ item['validate_certs']|default(omit) }}"
+    state: "{{ item['state']|default(omit) }}"
+  with_items: "{{ common_apt_repositories }}"

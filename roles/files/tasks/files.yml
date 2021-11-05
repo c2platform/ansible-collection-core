@@ -1,0 +1,46 @@
+---
+- name: Create dirname
+  file:
+    path: "{{ item|dirname }}"
+    state: directory
+    mode: 0755
+  with_items: "{{ common_files_set|map(attribute='dest')|list }}"
+
+- name: Various "content" files
+  copy:
+    content: "{{ item['content'] }}"
+    dest: "{{ item['dest'] }}"
+    mode: "{{ item['mode']|default('0755') }}"
+    owner: "{{ item['owner']|default(omit) }}"
+    group: "{{ item['group']|default(omit) }}"
+  with_items: "{{ common_files_set|selectattr('content', 'defined')|list }}"
+  notify: "{{ item['notify']|default(omit) }}"
+
+- name: Various "src" files
+  get_url:
+    url: "{{ item['src'] }}"
+    checksum: "{{ item['checksum']|default(omit) }}"
+    dest: "{{ item['dest'] }}"
+    mode: "{{ item['mode']|default('0755') }}"
+    owner: "{{ item['owner']|default(omit) }}"
+    group: "{{ item['group']|default(omit) }}"
+  with_items: "{{ common_files_set|selectattr('src', 'defined')|list }}"
+  notify: "{{ item['notify']|default(omit) }}"
+
+- name: Various "xpath" files
+  xml:
+    path: "{{ item['dest'] }}"
+    xpath: "{{ item['xpath'] }}"
+    input_type: xml
+    set_children: "{{ item['set_children']|default(omit) }}"
+    add_children: "{{ item['add_children']|default(omit) }}"
+  with_items: "{{ common_files_set|selectattr('xpath', 'defined')|list }}"
+  notify: "{{ item['notify']|default(omit) }}"
+
+- name: Various "regex" files
+  replace:
+    path: "{{ item['dest'] }}"
+    regexp: "{{ item['regex'] }}"
+    replace: "{{ item['replace'] }}"
+  with_items: "{{ common_files_set|selectattr('regex', 'defined')|list }}"
+  # notify: "{{ item['notify']|default(omit) }}" # TODO regex will always be "changed"

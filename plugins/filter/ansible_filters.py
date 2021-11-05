@@ -52,6 +52,13 @@ def inventory_hostname_vars(inventory_hostname, vars, default_vars=[]):
         return default_vars
 
 
+def update_list_attibute(lst, key, value):
+    for lst_itm in lst:
+        if key in lst_itm:
+            lst_itm[key] = value
+    return lst
+
+
 class FilterModule(object):
     """ansible filters."""
 
@@ -61,5 +68,6 @@ class FilterModule(object):
             'ansible_cache_file': ansible_cache_file,
             'inventory_hostname_group_index': inventory_hostname_group_index,
             'group_length': group_length,
-            'inventory_hostname_vars': inventory_hostname_vars
+            'inventory_hostname_vars': inventory_hostname_vars,
+            'update_list_attibute': update_list_attibute
         }
