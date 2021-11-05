@@ -1,0 +1,17 @@
+---
+- name: Unarchive
+  ansible.builtin.unarchive:
+    src: "{{ item['src'] }}"
+    dest: "{{ item['dest'] }}"
+    remote_src: "{{ item['remote_src']|default(omit) }}"
+    creates: "{{ item['creates']|default(omit) }}"
+    exclude: "{{ item['exclude']|default(omit) }}"
+    include: "{{ item['include']|default(omit) }}"
+    extra_opts: "{{ item['extra_opts']|default(omit) }}"
+    group: "{{ item['group']|default(omit) }}"
+    owner: "{{ item['owner']|default(omit) }}"
+    mode: "{{ item['mode']|default(omit) }}"
+    validate_certs: "{{ item['validate_certs']|default(omit) }}"
+    state: "{{ item['state']|default(omit) }}"
+  with_items: "{{ common_unarchive_set }}"
+  notify: "{{ item['notify']|default(omit) }}"

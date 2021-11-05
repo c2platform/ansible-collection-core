@@ -1,11 +1,7 @@
 ---
-#- debug:
-#    msg: |
-#     common_files: {{ common_files }}
-#     role_name: {{ role_name }}
-
 - include_tasks: directories.yml
   with_items: "{{ common_directories }}"
+  when: common_directories is defined
   loop_control:
     loop_var: common_directories_set_item
   vars:
@@ -13,6 +9,7 @@
 
 - include_tasks: files.yml
   with_items: "{{ common_files }}"
+  when: common_files is defined
   loop_control:
     loop_var: common_files_set_item
   vars:
@@ -20,7 +17,16 @@
 
 - include_tasks: acl.yml
   with_items: "{{ common_acl }}"
+  when: common_acl is defined
   loop_control:
     loop_var: common_acl_set_item
   vars:
     common_acl_set: "{{ common_acl[common_acl_set_item] }}"
+
+- include_tasks: unarchive.yml
+  with_items: "{{ common_unarchive }}"
+  when: common_unarchive is defined
+  loop_control:
+    loop_var: common_unarchive_set_item
+  vars:
+    common_unarchive_set: "{{ common_unarchive[common_unarchive_set_item] }}"
