@@ -4,9 +4,15 @@ C2 Platform generic roles that are used by all or some other roles. These roles 
 
 ## Roles
 
+* [java](./roles/java).
+* [lcm](./roles/lcm) facts for LCM operations for other roles to build upon.
+* [lvm](./roles/lvm) manage data disks for roles using [LVM](https://en.wikipedia.org/wiki/Logical_Volume_Manager_%28Linux%29).
+* [java](./roles/java).
 * [cacerts2](./roles/cacerts2) create your [own small CA](https://docs.ansible.com/ansible/latest/collections/community/crypto/docsite/guide_ownca.html).
 * [apt_repo](./roles/apt_repo) add APT keys, repositories.
 * [files](./roles/files) manage files, directories, ACL.
+* [postgresql_tasks](./roles/postgresql_tasks) include tasks for PostgreSQL database operations.
+* [postgresql_client](./roles/postgresql_client).
 
 ## Plugins
 
