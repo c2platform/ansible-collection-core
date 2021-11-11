@@ -1,0 +1,16 @@
+---
+- name: Slurp cat files
+  ansible.builtin.slurp:
+    src: "{{ cat_file }}"
+  register: cat_files
+  with_items: "{{ file_cat['cat'] }}"
+  loop_control:
+    loop_var: cat_file
+
+- name: Cat file
+  copy:
+    content: "{{ cat_files['results']|c2platform.core.slurp_decode|map(attribute='content-decoded')|join }}"
+    dest: "{{ file_cat['dest'] }}"
+    owner: "{{ file_cat['owner']|default(omit) }}"
+    group: "{{ file_cat['group']|default(omit) }}"
+    mode: "{{ file_cat['mode']|default(omit) }}"
