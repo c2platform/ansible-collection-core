@@ -6,6 +6,7 @@ __metaclass__ = type
 from ansible.errors import AnsibleFilterError
 import os
 import hashlib
+import base64
 
 
 # Return a logical name based on inventory file
@@ -59,6 +60,13 @@ def update_list_attibute(lst, key, value):
     return lst
 
 
+def slurp_decode(results):
+    for result in results:
+        decodedBytes = base64.urlsafe_b64decode(result['content'])
+        result['content-decoded'] = str(decodedBytes, "utf-8")
+    return results
+
+
 class FilterModule(object):
     """ansible filters."""
 
@@ -69,5 +77,6 @@ class FilterModule(object):
             'inventory_hostname_group_index': inventory_hostname_group_index,
             'group_length': group_length,
             'inventory_hostname_vars': inventory_hostname_vars,
-            'update_list_attibute': update_list_attibute
+            'update_list_attibute': update_list_attibute,
+            'slurp_decode': slurp_decode
         }

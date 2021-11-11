@@ -44,3 +44,8 @@
     replace: "{{ item['replace'] }}"
   with_items: "{{ common_files_set|selectattr('regex', 'defined')|list }}"
   # notify: "{{ item['notify']|default(omit) }}" # TODO regex will always be "changed"
+
+- include_tasks: files_cat.yml
+  with_items: "{{ common_files_set|selectattr('cat', 'defined')|list }}"
+  loop_control:
+    loop_var: file_cat
