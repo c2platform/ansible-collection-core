@@ -2,6 +2,7 @@
 dependencies:
   - {role: ansible-apt,             tags: apt, when: ansible_os_family == 'Debian' and common_ansible_apt|default(False) }
   - {role: apt_repo,                tags: apt, when: ansible_os_family == 'Debian' }
+  - {role: secrets,                 tags: vault }
   - {role: files,                   tags: filesystem }
   - {role: bootstrap,               tags: ansible }
   - {role: lcm,                     tags: ansible }

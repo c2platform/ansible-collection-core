@@ -6,9 +6,8 @@
 - [Requirements](#requirements)
 - [Git repositories](#git-repositories)
 - [Role Variables](#role-variables)
-    - [Optional Ansible User](#optional-ansible-user)
-    - [Optional AWX Ansible Vault](#optional-awx-ansible-vault)
-    - [common_regex_files](#common_regex_files)
+  - [Optional Ansible User](#optional-ansible-user)
+  - [common_regex_files](#common_regex_files)
 - [Dependencies](#dependencies)
 - [Example Playbook](#example-playbook)
 
@@ -38,22 +37,6 @@ common_ansible_user_expires: -1
 ```
 
 Note: `common_ansible_user_password` is the password shadow hash created with for example `openssl passwd -1 "mypassword"`. This done to prevent continuous changes being reported to the account if we use Ansible to do this for using for example `password_hash("sha512")` filter. 
-
-### Optional AWX Ansible Vault
-
-Currently AWX lacks adequate support for Ansible vault secrets. See for example [Support vault encrypted secrets in the inventory source · Issue #223 · ansible/awx](https://github.com/ansible/awx/issues/223).
-
-There are many workarounds available. This role support one solution with a optional var `common_secrets_dir`. You can for example set this to `"{{ inventory_dir }}/secret_vars"` and then create a folder `secret_vars` in your repo next to the inventory file. 
-
-```yaml
-common_secrets_dir: "{{ inventory_dir }}/project/inventory/test/secret_vars"
-```
-
-Any file you then put in this directory will then be included when this role runs.
-
-Note: when using AWX the `inventory_dir` is not what you might expect. It is not for example the same as the location in source control.
-
-TODO common_secrets_no_log
 
 ### common_regex_files
 

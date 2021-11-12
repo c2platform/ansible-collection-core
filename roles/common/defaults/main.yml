@@ -35,5 +35,3 @@ common_pip_ca_trust_store: /usr/share/pki/ca-trust-store-ansible-agent
 common_pip_install_upgrade: pip install --upgrade "pip < 21.0"
 
 common_manage_sudoers: false
-
-#common_secrets_dir: "{{ inventory_dir }}/secret_vars"

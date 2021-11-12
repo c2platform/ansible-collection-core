@@ -23,12 +23,6 @@
     path: /etc/profile.d/custom_prompt.sh
   when: common_terminal_prompt is not defined
 
-- name: Include secrets
-  include_vars:
-    dir: "{{ common_secrets_dir }}"
-  when: common_secrets_dir|default(False)
-  no_log: "{{ common_secrets_no_log|default(True) }}"
-
 - name: Regex files
   include: regex_files.yml
   with_items: "{{ common_regex_files }}"
