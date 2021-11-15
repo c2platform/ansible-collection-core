@@ -1,10 +1,4 @@
 ---
-- name: Create dirname
-  file:
-    path: "{{ item|dirname }}"
-    state: directory
-    mode: 0755
-  with_items: "{{ common_files_set|map(attribute='dest')|list }}"
 
 - name: Various "content" files
   copy:
