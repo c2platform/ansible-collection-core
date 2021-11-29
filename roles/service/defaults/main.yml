@@ -1,0 +1,10 @@
+---
+service_sections: ['Unit', 'Service', 'Install']
+service_keys:
+  Unit: ['Description', 'After']
+  Service: ['Type', 'WorkingDirectory', 'User', 'Group', 'ExecStart', 'ExecStop', 'Environment', 'EnvironmentFile', 'Restart', 'RestartSec', 'PIDFile', 'LimitNOFILE', 'LimitNPROC']
+  Install: ['WantedBy']
+service_defaults:
+  Install:
+    WantedBy: multi-user.target
+service: {}

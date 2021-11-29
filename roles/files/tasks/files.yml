@@ -1,5 +1,4 @@
 ---
-
 - name: Various "content" files
   copy:
     content: "{{ item['content'] }}"

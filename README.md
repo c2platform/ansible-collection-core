@@ -8,6 +8,7 @@ C2 Platform generic roles that are used by all or some other roles. These roles 
 * [cacerts2](./roles/cacerts2) create your [own small CA](https://docs.ansible.com/ansible/latest/collections/community/crypto/docsite/guide_ownca.html).
 * [apt_repo](./roles/apt_repo) add APT keys, repositories.
 * [files](./roles/files) manage files, directories, ACL.
+* [service](./roles/service) create systemd services.
 
 ## Plugins
 

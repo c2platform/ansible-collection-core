@@ -1,0 +1,15 @@
+{{ ansible_managed | comment }}
+{% set _service = service_defaults|combine(_service) %}
+{% set _service_sections = _service['sections']|default(service_sections) %}
+{% for _section in _service_sections %}
+{%   if _section in _service %}
+
+[{{ _section }}]
+{%   set _service_section_keys = _service['keys'][_section]|default(service_keys[_section]) %}
+{%     for _section_key in _service_section_keys %}
+{%       if _section_key in _service[_section] %}
+{{ _section_key }}={{ _service[_section][_section_key] }}
+{%       endif %}
+{%     endfor %}
+{%   endif %}
+{% endfor %}
