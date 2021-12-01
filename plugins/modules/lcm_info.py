@@ -150,15 +150,19 @@ def lcm_info(data):
 
 def main():
 
-  fields = {"role": {"required": True, "type": "str"},
-    "home": {"required": True, "type": "str"},
-    "version": {"required": True, "type": "str"},
-    "version_prepare": {"required": False, "type": "str"},
-    "versions_sequence": {"required": True, "type": "list"},
-    "database": {"required": False, "type": "str"}}
+    fields = {"role": {"required": True, "type": "str"},
+              "home": {"required": True, "type": "str"},
+              "version": {"required": True, "type": "str"},
+              "version_prepare": {"required": False, "type": "str"},
+              "versions_sequence": {"required": True, "type": "list"},
+              "database": {"required": False, "type": "str"}}
 
-  module = AnsibleModule(argument_spec=fields)
-  has_changed, fcts = lcm_info(module.params)
-  module.exit_json(changed=has_changed, ansible_facts=fcts)
+    module = AnsibleModule(
+        argument_spec=fields,
+        supports_check_mode=True)
+    has_changed, fcts = lcm_info(module.params)
+    module.exit_json(changed=has_changed, ansible_facts=fcts)
+
+
 if __name__ == '__main__':
     main()
