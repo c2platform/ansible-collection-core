@@ -28,5 +28,4 @@ Filter plugins:
 
 ## TODO
 
-1. Remove / move dependency on c2platform.platform.monit and c2platform.test.swid.
-2. 
+1. 
