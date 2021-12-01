@@ -67,6 +67,12 @@ def slurp_decode(results):
     return results
 
 
+def add_attributes(lst, dct):
+    for itm in lst:
+        itm.update(dct)
+    return lst
+
+
 class FilterModule(object):
     """ansible filters."""
 
@@ -78,5 +84,6 @@ class FilterModule(object):
             'group_length': group_length,
             'inventory_hostname_vars': inventory_hostname_vars,
             'update_list_attibute': update_list_attibute,
-            'slurp_decode': slurp_decode
+            'slurp_decode': slurp_decode,
+            'add_attributes': add_attributes
         }

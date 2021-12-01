@@ -6,6 +6,8 @@ Manage files, directories and ACL. This role is included in the [common](./../co
 
 - [Requirements](#requirements)
 - [Role Variables](#role-variables)
+  - [Files \( common_files \)](#files--common_files-)
+  - [Linux ACL \( common_acl \)](#linux-acl--common_acl-)
 - [Dependencies](#dependencies)
 - [Example Playbook](#example-playbook)
 
@@ -16,6 +18,100 @@ Manage files, directories and ACL. This role is included in the [common](./../co
 <!-- Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required. -->
 
 ## Role Variables
+
+### Files ( common_files )
+
+The dict `common_files` can be used to create files in various ways using for example [ansible.builtin.copy](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/copy_module.html), [ansible.builtin.get_url](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/get_url_module.html). It can also be used to modify files using [ansible.builtin.replace](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/replace_module.html), [xml](https://docs.ansible.com/ansible/2.9/modules/xml_module.html).
+
+For example let's say we want to provide our [CRL](https://en.wikipedia.org/wiki/Certificate_revocation_list) to our Tomcat application that uses [Apache Rampart](http://axis.apache.org/axis2/java/rampart/). In our Tomcat role we include `common_files` as follows
+
+```yaml
+- name: Files
+  include_role:
+    name: c2platform.core.files
+    tasks_from: main
+  vars:
+    role_name: tomcat # role_name
+    common_files: "{{ tomcat_files }}"
+    common_directories: "{{ tomcat_directories }}"
+    common_acl: "{{ tomcat_acl }}"
+```
+
+The reason we do not this role outright in our Ansible play is because we want more control over when and how files are created. As `group_vars` or `host_vars` we can now create a `crl` directory in the Tomcat `conf` directory.
+
+
+```yaml
+tomcat_directories:
+  crl:
+    - path: "{{ tomcat_apps_properties_folder }}/crl"
+      owner: "{{ tomcat_user }}"
+      group: "{{ tomcat_group }}"
+```
+
+We now define for our convience our list of CRL using a help var `my_crl`.
+
+```yaml
+my_crl:
+  - src: http://crl.pkioverheid.nl/PrivateRootLatestCRL-G1.crl
+    dest: "{{ tomcat_apps_properties_folder|default('whatever') }}/crl/PrivateRootLatestCRL-G1.crl"
+  - src: http://crl.pkioverheid.nl/DomPrivateServicesLatestCRL-G1.crl
+    dest: "{{ tomcat_apps_properties_folder|default('whatever') }}/crl/DomPrivateServicesLatestCRL-G1.crl"
+  - src: http://crl.managedpki.com/KPNBVPKIoverheidPrivateServicesCAG1/LatestCRL.crl
+    dest: "{{ tomcat_apps_properties_folder|default('whatever') }}/crl/KPNBVPKIoverheidPrivateServicesCAG1-LatestCRL.crl"
+  - src: http://crl.quovadisglobal.com/pkioprivservg1.crl
+    dest: "{{ tomcat_apps_properties_folder|default('whatever') }}/crl/pkioprivservg1.crl"
+  - src: http://crl.pkioverheid.nl/EVRootLatestCRL.crl
+    dest: "{{ tomcat_apps_properties_folder|default('whatever') }}/crl/EVRootLatestCRL.crl"
+  - src: http://crl.pkioverheid.nl/DomeinServerCA2020LatestCRL.crl
+    dest: "{{ tomcat_apps_properties_folder|default('whatever') }}/crl/DomeinServerCA2020LatestCRL.crl"
+  - src: http://crl.pkioverheid.nl/DomeinServerCA2020LatestCRL.crl
+    dest: "{{ tomcat_apps_properties_folder|default('whatever') }}/crl/DomeinServerCA2020LatestCRL.crl"
+```
+
+All the files need to be created using `tomcat_files` with the same properties so here too we create a help variable `my_clr_attrs`
+
+```yaml
+my_clr_attrs:
+  mode: '0700'
+  owner: "{{ tomcat_user }}"
+  group: "{{ tomcat_group }}"
+  delegate: yes
+  environment:
+    http_proxy: http://127.0.0.1:8888
+```
+
+Using the Jinja filter `c2platform.core.add_attributes` we now define `tomcat_files` by adding the default attributes to `my_crl`.
+
+```yaml
+tomcat_files:
+  crl: "{{ my_crl|c2platform.core.add_attributes(my_clr_attrs) }}"
+```
+
+Of course you can also writeout `tomcat_files` without any `my_crl`, `my_clr_attrs` and the filter `c2platform.core.add_attributes` as follows:
+
+```yaml
+tomcat_files:
+  crl:
+  - src: http://crl.pkioverheid.nl/PrivateRootLatestCRL-G1.crl
+    dest: "{{ tomcat_apps_properties_folder|default('whatever') }}/crl/PrivateRootLatestCRL-G1.crl"
+    mode: '0700'
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+    delegate: yes
+    environment:
+      http_proxy: http://127.0.0.1:8888
+  - src: http://crl.pkioverheid.nl/DomPrivateServicesLatestCRL-G1.crl
+    dest: "{{ tomcat_apps_properties_folder|default('whatever') }}/crl/DomPrivateServicesLatestCRL-G1.crl"
+    mode: '0700'
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+    delegate: yes
+    environment:
+      http_proxy: http://127.0.0.1:8888
+  - src: ....etc
+```
+
+### Linux ACL ( common_acl )
 
 Three dictionaries ( not lists ) `common_files`, `common_directories` and `common_acl`. Dictionaries are used to group resources you are creating. In example below `external-stub` is just a group. This group defines a list of directories to create.
 

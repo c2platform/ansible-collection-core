@@ -2,3 +2,4 @@
 common_files: []
 common_directories: []
 common_acl: []
+common_files_tmp: /tmp

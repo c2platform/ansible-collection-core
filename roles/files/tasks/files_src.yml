@@ -1,0 +1,32 @@
+---
+- name: Src file
+  get_url:
+    url: "{{ item['src'] }}"
+    checksum: "{{ item['checksum']|default(omit) }}"
+    dest: "{{ item['dest'] }}"
+    mode: "{{ item['mode']|default('0755') }}"
+    owner: "{{ item['owner']|default(omit) }}"
+    group: "{{ item['group']|default(omit) }}"
+  with_items: "{{ common_files_set|selectattr('src', 'defined')|selectattr('delegate', 'undefined')|list }}"
+  notify: "{{ item['notify']|default(omit) }}"
+  environment: "{{ item['environment']|default({}) }}"
+
+# more complex src files ( aka delegated download )
+- name: Src file ( delegated )
+  get_url:
+    url: "{{ item['src'] }}"
+    checksum: "{{ item['checksum']|default(omit) }}"
+    dest: "{{ common_files_tmp }}/{{ item['src']|checksum }}"
+  with_items: "{{ common_files_set|selectattr('src', 'defined')|selectattr('delegate', 'defined')|list }}"
+  delegate_to: localhost
+  environment: "{{ item['environment']|default({}) }}"
+
+- name: Copy src file ( delegated )
+  ansible.builtin.copy:
+    src: "{{ common_files_tmp }}/{{ item['src']|checksum }}"
+    dest: "{{ item['dest'] }}"
+    owner: "{{ item['owner']|default(omit) }}"
+    group: "{{ item['group']|default(omit) }}"
+    mode: "{{ item['mode']|default('0755') }}"
+  with_items: "{{ common_files_set|selectattr('src', 'defined')|selectattr('delegate', 'defined')|list }}"
+  notify: "{{ item['notify']|default(omit) }}"

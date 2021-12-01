@@ -9,16 +9,7 @@
   with_items: "{{ common_files_set|selectattr('content', 'defined')|list }}"
   notify: "{{ item['notify']|default(omit) }}"
 
-- name: Various "src" files
-  get_url:
-    url: "{{ item['src'] }}"
-    checksum: "{{ item['checksum']|default(omit) }}"
-    dest: "{{ item['dest'] }}"
-    mode: "{{ item['mode']|default('0755') }}"
-    owner: "{{ item['owner']|default(omit) }}"
-    group: "{{ item['group']|default(omit) }}"
-  with_items: "{{ common_files_set|selectattr('src', 'defined')|list }}"
-  notify: "{{ item['notify']|default(omit) }}"
+- include_tasks: files_src.yml
 
 - name: Various "xpath" files
   xml:
