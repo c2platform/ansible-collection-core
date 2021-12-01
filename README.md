@@ -12,6 +12,7 @@ C2 Platform generic roles that are used by all or some other roles. These roles 
 * [java](./roles/java).
 * [lcm](./roles/lcm) facts for LCM operations for other roles to build upon.
 * [lvm](./roles/lvm) manage data disks for roles using [LVM](https://en.wikipedia.org/wiki/Logical_Volume_Manager_%28Linux%29).
+* [files](./roles/files) create / manage files in various ways.
 * [java](./roles/java).
 * [postgresql_tasks](./roles/postgresql_tasks) include tasks for PostgreSQL database operations.
 * [postgresql_client](./roles/postgresql_client).
