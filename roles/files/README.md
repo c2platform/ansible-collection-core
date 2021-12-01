@@ -23,7 +23,7 @@ Manage files, directories and ACL. This role is included in the [common](./../co
 
 The dict `common_files` can be used to create files in various ways using for example [ansible.builtin.copy](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/copy_module.html), [ansible.builtin.get_url](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/get_url_module.html). It can also be used to modify files using [ansible.builtin.replace](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/replace_module.html), [xml](https://docs.ansible.com/ansible/2.9/modules/xml_module.html).
 
-For example let's say we want to provide our [CRL](https://en.wikipedia.org/wiki/Certificate_revocation_list) to our Tomcat application that uses [Apache Rampart](http://axis.apache.org/axis2/java/rampart/). In our Tomcat role we include `common_files` as follows
+For example let's say we want to provide [CRL](https://en.wikipedia.org/wiki/Certificate_revocation_list) to our Tomcat application that uses [Apache Rampart](http://axis.apache.org/axis2/java/rampart/) for secure messaging. In our Tomcat role we include `common_files` as follows
 
 ```yaml
 - name: Files
@@ -37,7 +37,7 @@ For example let's say we want to provide our [CRL](https://en.wikipedia.org/wiki
     common_acl: "{{ tomcat_acl }}"
 ```
 
-The reason we do not this role outright in our Ansible play is because we want more control over when and how files are created. As `group_vars` or `host_vars` we can now create a `crl` directory in the Tomcat `conf` directory.
+Note: the reason we do not use this role outright in our Ansible play is because we want more control over when and how files are created. As `group_vars` or `host_vars` we can now create a `crl` directory in the Tomcat `conf` directory.
 
 
 ```yaml
@@ -48,7 +48,7 @@ tomcat_directories:
       group: "{{ tomcat_group }}"
 ```
 
-We now define for our convience our list of CRL using a help var `my_crl`.
+We now define for our convience our list of CRL using a help var `my_crl` with items with only `dest`, `src` keys.
 
 ```yaml
 my_crl:
@@ -86,7 +86,6 @@ Using the Jinja filter `c2platform.core.add_attributes` we now define `tomcat_fi
 tomcat_files:
   crl: "{{ my_crl|c2platform.core.add_attributes(my_clr_attrs) }}"
 ```
-
 Of course you can also writeout `tomcat_files` without any `my_crl`, `my_clr_attrs` and the filter `c2platform.core.add_attributes` as follows:
 
 ```yaml
@@ -109,6 +108,12 @@ tomcat_files:
     environment:
       http_proxy: http://127.0.0.1:8888
   - src: ....etc
+```
+
+To configure our application we might have to provide a comma separated list of the CRLs for example for a Java property files were we use var `siwu_broker_crl`. 
+
+```yaml
+siwu_broker_crl: "{{ suwinet_broker_crl|map(attribute='dest')|join(',') }}"
 ```
 
 ### Linux ACL ( common_acl )
