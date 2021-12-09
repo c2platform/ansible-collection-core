@@ -1,5 +1,5 @@
 ---
-- name: Various "content" files
+- name: Content file
   copy:
     content: "{{ item['content'] }}"
     dest: "{{ item['dest'] }}"
@@ -11,7 +11,7 @@
 
 - include_tasks: files_src.yml
 
-- name: Various "xpath" files
+- name: Xpath file
   xml:
     path: "{{ item['dest'] }}"
     xpath: "{{ item['xpath'] }}"
@@ -21,7 +21,7 @@
   with_items: "{{ common_files_set|selectattr('xpath', 'defined')|list }}"
   notify: "{{ item['notify']|default(omit) }}"
 
-- name: Various "regex" files
+- name: Regex file
   replace:
     path: "{{ item['dest'] }}"
     regexp: "{{ item['regex'] }}"
@@ -33,3 +33,10 @@
   with_items: "{{ common_files_set|selectattr('cat', 'defined')|list }}"
   loop_control:
     loop_var: file_cat
+
+- name: Absent file
+  file:
+    path: "{{ item['dest'] }}"
+    state: absent
+  with_items: "{{ common_files_set|selectattr('state', 'defined')|selectattr('state', 'eq', 'absent')|list }}"
+  notify: "{{ item['notify']|default(omit) }}"

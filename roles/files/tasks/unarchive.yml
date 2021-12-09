@@ -15,3 +15,17 @@
     state: "{{ item['state']|default(omit) }}"
   with_items: "{{ common_unarchive_set }}"
   notify: "{{ item['notify']|default(omit) }}"
+
+- name: Shell ( after unarchive )
+  ansible.builtin.shell:
+    chdir: "{{ item['chdir']|default(omit) }}"
+    cmd: "{{ item['cmd'] }}"
+    creates: "{{ item['creates']|default(omit) }}"
+    executable: "{{ item['executable']|default(omit) }}"
+    removes: "{{ item['removes']|default(omit) }}"
+    stdin: "{{ item['stdin']|default(omit) }}"
+    stdin_add_newline: "{{ item['stdin_add_newline']|default(omit) }}"
+    warn: "{{ item['warn']|default(omit) }}"
+  with_items: "{{ common_unarchive_set|selectattr('shell', 'defined')|map(attribute='shell')|list }}"
+  notify: "{{ item['notify']|default(omit) }}"
+  register: _shell
