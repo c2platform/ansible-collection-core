@@ -29,7 +29,7 @@
     name: "{{ vars[lcm_role_upgrade + '_database_name_version'] }}"
     lc_collate: "{{ vars[lcm_role_upgrade + '_database_lc_collate']|default('en_US.UTF-8') }}"
     lc_ctype: "{{ vars[lcm_role_upgrade + '_database_lc_ctype']|default('en_US.UTF-8') }}"
-    encoding: "{{ vars[lcm_role_upgrade + '_database_encofing']|default('UTF-8') }}"
+    encoding: "{{ vars[lcm_role_upgrade + '_database_encoding']|default('UTF-8') }}"
     template: "{{ vars[lcm_role_upgrade + '_database_template'] }}"
     port: "{{ vars[lcm_role_upgrade + '_database_port'] }}"
     owner: "{{ vars[lcm_role_upgrade + '_database_username'] }}"
