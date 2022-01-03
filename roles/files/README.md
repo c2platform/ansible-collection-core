@@ -2,11 +2,13 @@
 
 Manage files, directories and ACL. This role is included in the [common](./../common) role.
 
-<!-- MarkdownTOC levels="2,3" autolink="true" -->
+<!-- MarkdownTOC levels="2,3,4" autolink="true" -->
 
 - [Requirements](#requirements)
 - [Role Variables](#role-variables)
   - [Files \( common_files \)](#files--common_files-)
+    - [Example CRL](#example-crl)
+    - [Example JMX](#example-jmx)
   - [Linux ACL \( common_acl \)](#linux-acl--common_acl-)
 - [Dependencies](#dependencies)
 - [Example Playbook](#example-playbook)
@@ -22,6 +24,8 @@ Manage files, directories and ACL. This role is included in the [common](./../co
 ### Files ( common_files )
 
 The dict `common_files` can be used to create files in various ways using for example [ansible.builtin.copy](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/copy_module.html), [ansible.builtin.get_url](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/get_url_module.html). It can also be used to modify files using [ansible.builtin.replace](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/replace_module.html), [xml](https://docs.ansible.com/ansible/2.9/modules/xml_module.html).
+
+#### Example CRL
 
 For example let's say we want to provide [CRL](https://en.wikipedia.org/wiki/Certificate_revocation_list) to our Tomcat application that uses [Apache Rampart](http://axis.apache.org/axis2/java/rampart/) for secure messaging. In our Tomcat role we include `common_files` as follows
 
@@ -114,6 +118,50 @@ To configure our application we might have to provide a comma separated list of 
 
 ```yaml
 siwu_broker_crl: "{{ suwinet_broker_crl|map(attribute='dest')|join(',') }}"
+```
+
+#### Example JMX
+
+Sometimes there are files you want to create but not update. For example the JMX password file `jmxremote.password`. Tomcat is configured /started in such a way that it will hash clear text passwords we put in these files. This behaviour is controlled by the property `com.sun.management.jmxremote.password.toHashes`.
+
+```yaml
+tomcat_catalina_opts_default: >-
+  -Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true
+  -Dfile.encoding=UTF-8
+  -Dsun.net.inetaddr.ttl=300
+  -server
+  -Dorg.apache.tomcat.util.http.Parameters.MAX_COUNT=8192
+  -Xms3000m
+  -Xmx3000m
+  -Djavax.sql.DataSource.Factory=org.apache.commons.dbcp.BasicDataSourceFactory
+  -Dcom.sun.management.jmxremote.rmi.port=8375
+  -Dcom.sun.management.jmxremote.port=8375
+  -Dcom.sun.management.jmxremote.access.file={{ tomcat_apps_properties_folder }}/jmxremote.access
+  -Dcom.sun.management.jmxremote.password.file={{ tomcat_apps_properties_folder }}/jmxremote.password
+  -Dcom.sun.management.jmxremote.ssl=false
+  -Dcom.sun.management.jmxremote.password.toHashes=true
+```
+
+To create the two JXM files `jmxremote.access` and `jmxremote.password` we use `tomcat_files` with `content` attribute but in the case of password file we add an extra `update` attribute equal to `no`. Setting this property to `no` will ensure that the will is only created. This initial creation is done with clear text passwords. On first login the passwords are hashed by the JMX agent as described for example in [Hashed Passwords for Out-of-the-Box JMX Agent](https://bugs.openjdk.java.net/browse/JDK-8193315).
+
+```yaml
+tomcat_files:
+  jmx:
+    - content: |
+        monitorRole readonly
+        controlRole readwrite
+      dest: "{{ tomcat_apps_properties_folder }}/jmxremote.access"
+      mode: '600'
+      owner: "{{ tomcat_user }}"
+      group: "{{ tomcat_group }}"
+    - content: |
+        monitorRole secret
+        controlRole secret
+      dest: "{{ tomcat_apps_properties_folder }}/jmxremote.password"
+      mode: '600'
+      owner: "{{ tomcat_user }}"
+      group: "{{ tomcat_group }}"
+      update: no
 ```
 
 ### Linux ACL ( common_acl )
