@@ -1,0 +1,118 @@
+---
+- name: Trusted sites facts
+  set_fact:
+    jdk: "{{ java_versions[java_version_with_trusted_sites] }}"
+
+- name: Download cert
+  shell: >
+    echo -n | openssl s_client -connect {{ site['uri'] }}
+    | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p'
+  with_items: "{{ java_versions[java_version]['trusted-sites'] }}"
+  loop_control:
+    label: "{{ site['uri'] }}"
+    loop_var: site
+  changed_when: False
+  register: _trusted_site_cert_download
+
+- name: Get aliases in keystore
+  shell: >
+    {{ java_versions[java_version]['keytool'] }}
+    -list
+    -keystore {{ jdk['keystore'] }}
+    -storepass {{ java_versions[java_version]['keystore-password']|default('changeit') }}
+    -v | grep "Alias name" | awk '{print $3}'
+  changed_when: False
+  register: _keystore_aliases
+
+- name: Set fact java_keystore_aliases
+  set_fact:
+    java_keystore_aliases: "{{ _keystore_aliases['stdout_lines'] }}"
+
+- name: Export certificates # in keystore
+  shell: >
+    {{ jdk['keytool'] }}
+    -exportcert
+    -rfc
+    -alias {{ site['alias'] }}
+    -file /var/tmp/export-{{ site['alias'] }}-{{ jdk['keytool']|checksum }}.pem
+    -cacerts
+    -storepass {{ jdk['keystore_pass']|default('changeit') }}
+    -noprompt
+    -v
+  with_items: "{{ jdk['trusted-sites'] }}"
+  when: site['alias'] in java_keystore_aliases
+  loop_control:
+    label: "/var/tmp/export-{{ site['alias'] }}-{{ jdk['keytool']|checksum }}.pem"
+    loop_var: site
+  changed_when: False
+  register: _trusted_site_cert_export
+
+- name: Slurp certificates # exported to /var/tmp
+  ansible.builtin.slurp:
+    src: "/var/tmp/export-{{ site['alias'] }}-{{ jdk['keytool']|checksum }}.pem"
+  with_items: "{{ jdk['trusted-sites'] }}"
+  when: site['alias'] in java_keystore_aliases
+  loop_control:
+    label: "/var/tmp/export-{{ site['alias'] }}-{{ jdk['keytool']|checksum }}.pem"
+    loop_var: site
+  changed_when: False
+  register: _slurped_site_cert_export
+
+- name: Set trusted sites facts
+  java_facts_trusted_sites:
+    version: "{{ java_version_with_trusted_sites }}"
+    versions: "{{ java_versions }}"
+    trusted_sites:
+      downloads: "{{ _trusted_site_cert_download }}"
+      exports: "{{ _slurped_site_cert_export }}"
+
+- name: Write new site cert # not in keystore
+  copy:
+    content: "{{ site['downloaded']['cert'] }}"
+    dest: "/var/tmp/trusted-site-cert-{{ site['uri']|replace(':','-')|replace('.','-') }}"
+  with_items: "{{ java_versions[java_version_with_trusted_sites]['trusted-sites-status']|selectattr('new','equalto',True)|list }}"
+  loop_control:
+    label: "/var/tmp/trusted-site-cert-{{ site['uri']|replace(':','-')|replace('.','-') }}"
+    loop_var: site
+
+- name: Add new cert to keystore
+  java_cert:
+    cert_alias: "{{ site['alias'] }}"
+    cert_path: "/var/tmp/trusted-site-cert-{{ site['uri']|replace(':','-')|replace('.','-') }}"
+    keystore_path: "{{ java_version_with_trusted_sites|c2platform.core.java_keystore(jdk) }}"
+    keystore_pass: "{{ jdk['keystore_pass']|default('changeit') }}"
+    executable: "{{ java_version_with_trusted_sites|c2platform.core.java_keytool(jdk) }}"
+    state: present
+  with_items: "{{ java_versions[java_version_with_trusted_sites]['trusted-sites-status']|selectattr('new','equalto',True)|list }}"
+  loop_control:
+    label: "/var/tmp/trusted-site-cert-{{ site['uri']|replace(':','-')|replace('.','-') }} → {{ java_version_with_trusted_sites|c2platform.core.java_keystore(jdk) }}"
+    loop_var: site
+  notify: "{{ java_versions[java_version_with_trusted_sites]['notify']|default(omit) }}"
+
+- name: Remove old cert from keystore
+  java_cert:
+    cert_alias: "{{ site['alias'] }}"
+    cert_path: "/var/tmp/trusted-site-cert-{{ site['uri']|replace(':','-')|replace('.','-') }}"
+    keystore_path: "{{ java_version_with_trusted_sites|c2platform.core.java_keystore(jdk) }}"
+    keystore_pass: "{{ jdk['keystore_pass']|default('changeit') }}"
+    executable: "{{ java_version_with_trusted_sites|c2platform.core.java_keytool(jdk) }}"
+    state: absent
+  with_items: "{{ java_versions[java_version_with_trusted_sites]['trusted-sites-status']|selectattr('status','equalto','update')|list }}"
+  loop_control:
+     label: "/var/tmp/trusted-site-cert-{{ site['uri']|replace(':','-')|replace('.','-') }} → {{ java_version_with_trusted_sites|c2platform.core.java_keystore(jdk) }}"   
+     loop_var: site
+  notify: "{{ java_versions[java_version_with_trusted_sites]['notify']|default(omit) }}"
+
+- name: Add updated cert to keystore
+  java_cert:
+    cert_alias: "{{ site['alias'] }}"
+    cert_path: "/var/tmp/trusted-site-cert-{{ site['uri']|replace(':','-')|replace('.','-') }}"
+    keystore_path: "{{ java_version_with_trusted_sites|c2platform.core.java_keystore(jdk) }}"
+    keystore_pass: "{{ jdk['keystore_pass']|default('changeit') }}"
+    executable: "{{ java_version_with_trusted_sites|c2platform.core.java_keytool(jdk) }}"
+    state: present
+  with_items: "{{ java_versions[java_version_with_trusted_sites]['trusted-sites-status']|selectattr('status','equalto','update')|list }}"
+  loop_control:
+    label: "/var/tmp/trusted-site-cert-{{ site['uri']|replace(':','-')|replace('.','-') }} → {{ java_version_with_trusted_sites|c2platform.core.java_keystore(jdk) }}"
+    loop_var: site
+  notify: "{{ java_versions[java_version_with_trusted_sites]['notify']|default(omit) }}"

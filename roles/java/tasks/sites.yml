@@ -23,7 +23,7 @@
 
 - name: Write cert cache files
   copy:
-    content: "{{ java_trusted_sites['certs'][site]['cert'] }}"
+    content: "{{ trusted_sites_download['results']|selectattr('site', 'equalto', site)|map(attribute='stdout')|list|first }}"
     dest: "/var/tmp/trusted-cert-{{ java_version_site }}-{{ java_trusted_sites['certs'][site]['uri']|checksum }}"
   with_items: "{{ java_trusted_sites['certs'] }}"
   loop_control:
