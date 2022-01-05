@@ -123,7 +123,7 @@ tomcat_environment_variables:
     value: "{{ java_versions[java_version]['java-home'] }}"
 ```
 
-Other attributes are you can use are `keytool` and `keystore`. You provide the values for these attributes also yourself. For example the default location of the keystore might change from one Java version to the next. So for example older Java 8 has keystore in different location.
+Other attributes you can use are `keytool` and `keystore`. You can also provide override the values if the defaults are not correct. For example the default location of the keystore might change from one Java version to the next. So for example older Java 8 has keystore in different location.
 
 ```yaml
 java_versions:
