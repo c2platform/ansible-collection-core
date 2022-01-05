@@ -47,7 +47,7 @@
     -rfc
     -alias {{ trust['alias'] }}
     -file /var/tmp/java-trust-export-{{ trust['alias'] }}-{{ jdk['keytool']|checksum }}
-    -cacerts
+    -keystore {{ jdk['keystore'] }}
     -storepass {{ jdk['keystore_pass']|default('changeit') }}
     -noprompt
     -v
