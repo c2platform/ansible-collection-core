@@ -27,16 +27,9 @@
     mode: 0644
   when: java_home_etc_profile|default(False)
 
-- name: Import bundles
-  include: bundles.yml
+- name: Configure trusts
+  include: trusts.yml
   with_items: "{{ java_install_archives + java_install_packages }}"
   loop_control:
-    loop_var: bundle_java_version
-  when: java_versions[java_version]['bundles'] is defined
-
-- name: Import trusted sites
-  include: sites.yml
-  with_items: "{{ java_versions }}"
-  loop_control:
-    loop_var: java_version_site
-  when: java_trusted_sites is defined and java_trusted_sites_enabled|default(False)
+    loop_var: java_version_with_trusts
+  when: java_versions[java_version_with_trusts]['trusts'] is defined

@@ -1,10 +1,6 @@
 ---
-# Name of volume group
-lvm_vg: 'data'
-
-# List of devices to use for volume group
-lvm_vg_devices: ['/dev/sdx']
-
+lvm_vg: 'data' # name of volume group
+lvm_vg_devices: ['sdx'] # list of devices to use for volume group
 lvm_fstype: 'ext4'
 
 # Roles ( external / internal) supported by this lvm role
@@ -26,7 +22,7 @@ lvm_roles_supported:
 
 lvm_roles:
   nfs:
-    size: '10g' 
+    size: '10g'
     path: '/nfs'
   postgresql:
     size: '10g'
@@ -38,31 +34,31 @@ lvm_roles:
     size: '10g'
     path: '{{ nexus_home if nexus_home is defined else "/opt/nexus" }}'
   jenkins:
-    size: '10g' 
+    size: '10g'
     path: '/var/lib/jenkins'
   bitbucket:
-    size: '10g' 
+    size: '10g'
     path: '{{ bitbucket_home if bitbucket_home is defined else "/opt/bitbucket" }}'
   confluence:
-    size: '10g' 
+    size: '10g'
     path: '{{ confluence_home if confluence_home is defined else "/opt/confluence" }}'
   jira:
-    size: '10g' 
+    size: '10g'
     path: '{{ jira_home if jira_home is defined else "/opt/jira" }}'
   sites:
-    size: '10g' 
+    size: '10g'
     path: '/var/www/html'
   docker: # geerlingguy.docker
     size: '10g'
-    path: '/var/lib/docker'  
+    path: '/var/lib/docker'
   awx:
-    size: '10g' 
+    size: '10g'
     path: '/opt/awx'
   guacamole:
-    size: '100m' 
+    size: '100m'
     path: '{{ guacamole_home|default("/opt/guacamole") }}'
   myapp:
-    size: '1g' 
+    size: '1g'
     path: '{{ myapp_home if myapp_home is defined else "/opt/myapp" }}'
   reverse_proxy:
     size: '1g'

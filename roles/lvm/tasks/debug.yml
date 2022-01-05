@@ -13,5 +13,3 @@
     - 'ansible_role_names_cleaned: {{ ansible_role_names_cleaned }}'
     - 'ansible_play_role_names: {{ ansible_play_role_names }}'
     - 'ansible_play_name: {{ ansible_play_name }}'
-
-

@@ -13,7 +13,7 @@ readme: README.md
 
 tags: []
 
-dependencies: []
+dependencies: {}
 
 repository: https://github.com/c2platform/ansible-collection-core
 documentation: https://github.com/c2platform/ansible-collection-core
