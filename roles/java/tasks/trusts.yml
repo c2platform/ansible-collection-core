@@ -1,0 +1,146 @@
+---
+- name: Set jdk fact
+  set_fact:
+    jdk: "{{ java_versions[java_version_with_trusts] }}"
+
+- name: Download cert
+  get_url:
+    url: "{{ trust['url'] }}"
+    checksum: "{{ trust['checksum']|default(omit) }}"
+    dest: "/var/tmp/java-trust-{{ trust['url']|checksum }}"
+    validate_certs: no
+  with_items: "{{ jdk['trusts']|selectattr('url', 'defined')|list }}"
+  loop_control:
+    label: "{{ trust['url'] }} → /var/tmp/java-trust-{{ trust['url']|checksum }}"
+    loop_var: trust
+  register: _java_trust_download
+
+- name: Get cert ( uri )
+  shell: >
+    echo -n | openssl s_client -connect {{ trust['uri'] }}
+    | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p'
+  with_items: "{{ jdk['trusts']|selectattr('uri', 'defined')|list }}"
+  loop_control:
+    label: "{{ trust['uri'] }}"
+    loop_var: trust
+  changed_when: False
+  register: _java_trust_download_uri
+
+- name: Get aliases in keystore
+  shell: >
+    {{ jdk['keytool'] }}
+    -list
+    -keystore {{ jdk['keystore'] }}
+    -storepass {{ jdk['keystore-password']|default('changeit') }}
+    -v | grep "Alias name" | awk '{print $3}'
+  changed_when: False
+  register: _jdk_keystore_aliases
+
+- name: Set fact java_jdk_keystore_aliases
+  set_fact:
+    java_jdk_keystore_aliases: "{{ _jdk_keystore_aliases['stdout_lines'] }}"
+
+- name: Export certificates # in keystore
+  shell: >
+    {{ jdk['keytool'] }}
+    -exportcert
+    -rfc
+    -alias {{ trust['alias'] }}
+    -file /var/tmp/java-trust-export-{{ trust['alias'] }}-{{ jdk['keytool']|checksum }}
+    -cacerts
+    -storepass {{ jdk['keystore_pass']|default('changeit') }}
+    -noprompt
+    -v
+  with_items: "{{ jdk['trusts'] }}"
+  when: trust['alias'] in java_jdk_keystore_aliases
+  loop_control:
+    label: "/var/tmp/java-trust-export-{{ trust['alias'] }}-{{ jdk['keytool']|checksum }}"
+    loop_var: trust
+  changed_when: False
+  register: _jdk_keystore_aliases_export
+
+- name: Slurp certificates # exported to /var/tmp
+  ansible.builtin.slurp:
+    src: "/var/tmp/java-trust-export-{{ trust['alias'] }}-{{ jdk['keytool']|checksum }}"
+  with_items: "{{ jdk['trusts'] }}"
+  when: trust['alias'] in java_jdk_keystore_aliases
+  loop_control:
+    label: "/var/tmp/java-trust-export-{{ trust['alias'] }}-{{ jdk['keytool']|checksum }}"
+    loop_var: trust
+  changed_when: False
+  register: _jdk_exports_slurped
+
+- name: Set trusted sites facts
+  java_facts:
+    version: "{{ java_version_with_trusts }}"
+    versions: "{{ java_versions }}"
+    alternatives: "{{ java_version_alternatives }}"
+    trusts:
+      downloads: "{{ _java_trust_download }}"
+      downloads_uri: "{{ _java_trust_download_uri }}"
+      exports: "{{ _jdk_exports_slurped }}"
+
+- name: Write uri cert
+  copy:
+    content: "{{ trust['downloaded']['cert'] }}"
+    dest: "/var/tmp/java-trust-{{ trust['uri']|checksum }}"
+  with_items: "{{ java_versions[java_version_with_trusts]['trusts-status']|selectattr('uri','defined')|rejectattr('status','eq', 'remove')|list }}"
+  loop_control:
+    label: "{{ trust['uri'] }} → /var/tmp/java-trust-{{ trust['uri']|checksum }}"
+    loop_var: trust
+
+- name: Add new cert to keystore
+  java_cert:
+    cert_alias: "{{ trust['alias'] }}"
+    cert_path: "/var/tmp/java-trust-{{ trust['uri']|default(trust['url'])|checksum }}"
+    keystore_path: "{{ java_version_with_trusts|c2platform.core.java_keystore(jdk) }}"
+    keystore_pass: "{{ jdk['keystore_pass']|default('changeit') }}"
+    executable: "{{ java_version_with_trusts|c2platform.core.java_keytool(jdk) }}"
+    state: present
+  with_items: "{{ java_versions[java_version_with_trusts]['trusts-status']|selectattr('new','equalto',True)|list }}"
+  loop_control:
+    label: "/var/tmp/java-trust-{{ trust['uri']|default(trust['url'])|checksum }} → {{ trust['alias'] }} {{ java_version_with_trusts|c2platform.core.java_keystore(jdk) }}"
+    loop_var: trust
+  notify: "{{ java_versions[java_version_with_trusts]['notify']|default(omit) }}"
+
+- name: Remove old cert from keystore
+  java_cert:
+    cert_alias: "{{ trust['alias'] }}"
+    cert_path: "/var/tmp/java-trust-{{ trust['uri']|default(trust['url'])|checksum }}"
+    keystore_path: "{{ java_version_with_trusts|c2platform.core.java_keystore(jdk) }}"
+    keystore_pass: "{{ jdk['keystore_pass']|default('changeit') }}"
+    executable: "{{ java_version_with_trusts|c2platform.core.java_keytool(jdk) }}"
+    state: absent
+  with_items: "{{ java_versions[java_version_with_trusts]['trusts-status']|selectattr('status','equalto','update')|list }}"
+  loop_control:
+     label: "{{ trust['alias'] }} {{ java_version_with_trusts|c2platform.core.java_keystore(jdk) }}"
+     loop_var: trust
+  notify: "{{ java_versions[java_version_with_trusts]['notify']|default(omit) }}"
+
+- name: Add updated cert to keystore
+  java_cert:
+    cert_alias: "{{ trust['alias'] }}"
+    cert_path: "/var/tmp/java-trust-{{ trust['uri']|default(trust['url'])|checksum }}"
+    keystore_path: "{{ java_version_with_trusts|c2platform.core.java_keystore(jdk) }}"
+    keystore_pass: "{{ jdk['keystore_pass']|default('changeit') }}"
+    executable: "{{ java_version_with_trusts|c2platform.core.java_keytool(jdk) }}"
+    state: present
+  with_items: "{{ java_versions[java_version_with_trusts]['trusts-status']|selectattr('status','equalto','update')|list }}"
+  loop_control:
+    label: "/var/tmp/java-trust-{{ trust['uri']|default(trust['url'])|checksum }} → {{ trust['alias'] }} {{ java_version_with_trusts|c2platform.core.java_keystore(jdk) }}"
+    loop_var: trust
+  notify: "{{ java_versions[java_version_with_trusts]['notify']|default(omit) }}"
+
+- name: Remove cert
+  java_cert:
+    cert_alias: "{{ trust['alias'] }}"
+    cert_path: "/var/tmp/java-trust-{{ trust['uri']|default(trust['url'])|checksum }}"
+    keystore_path: "{{ java_version_with_trusts|c2platform.core.java_keystore(jdk) }}"
+    keystore_pass: "{{ jdk['keystore_pass']|default('changeit') }}"
+    executable: "{{ java_version_with_trusts|c2platform.core.java_keytool(jdk) }}"
+    state: absent
+  with_items: "{{ java_versions[java_version_with_trusts]['trusts-status']|selectattr('status','equalto','remove')|list }}"
+  loop_control:
+    label: "{{ trust['alias'] }} {{ java_version_with_trusts|c2platform.core.java_keystore(jdk) }}"
+    loop_var: trust
+  notify: "{{ java_versions[java_version_with_trusts]['notify']|default(omit) }}"

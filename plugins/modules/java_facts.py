@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 from ansible.module_utils.basic import *
+import hashlib
 
 
 # Return folder name for JDK
@@ -39,6 +40,91 @@ def java_path(java_home, rel_path):
     return os.path.join(os.path.sep, java_home, rel_path)
 
 
+def java_facts_trusts_export(data, fcts, trust):
+    trust['exported'] = {}
+    trust['exported']['status'] = False
+    # trust['exported']['cert'] = None
+    trust['exported']['sha256'] = None
+    for exp in data['trusts']['exports']['results']:
+        if trust['alias'] == exp['trust']['alias']:
+            if 'source' in exp:
+                f = open(exp['source'], "r")
+                crt = f.read().rstrip()
+                crt2 = crt.encode('utf-8')
+                chksm = hashlib.sha256(crt2).hexdigest()
+                trust['exported']['cert'] = crt
+                trust['exported']['sha256'] = chksm
+                trust['exported']['status'] = True
+    return trust
+
+
+def java_facts_trusts_download(data, fcts, trust):
+    trust['downloaded'] = {}
+    trust['downloaded']['status'] = False
+    for dwnld in data['trusts']['downloads_uri']['results']:
+        if trust['alias'] == dwnld['trust']['alias']:
+            if 'BEGIN CERTIFICATE' in dwnld['stdout']:
+                stdout2 = dwnld['stdout'].rstrip().encode('utf-8')
+                chksm = hashlib.sha256(stdout2).hexdigest()
+                trust['downloaded']['status'] = True
+                trust['downloaded']['cert'] = dwnld['stdout']
+                trust['downloaded']['sha256'] = chksm
+    for dwnld in data['trusts']['downloads']['results']:
+        if trust['alias'] == dwnld['trust']['alias']:
+            crt = open(dwnld['dest'], "r").read().rstrip()
+            chksm = hashlib.sha256(crt.encode('utf-8')).hexdigest()
+            trust['downloaded']['status'] = True
+            # trust['downloaded']['cert'] = crt
+            trust['downloaded']['path'] = dwnld['dest']
+            trust['downloaded']['sha256'] = chksm
+    return trust
+
+
+def trust_status(trust):
+    ds = trust['downloaded']['status']
+    es = trust['exported']['status']
+    dsum = trust['downloaded']['sha256']
+    esum = trust['exported']['sha256']
+    new = False
+    if ds and not es:
+        new = True
+        s = "import"
+        m = "Certificate alias {} not in keystore".format(trust['alias'])
+    if ds and es and dsum != esum:
+        s = "update"
+        m = 'Certificate alias {} in keystore is old'.format(trust['alias'])
+    if ds and es and dsum == esum:
+        s = "ok"
+        m = 'Certificate alias {} is current'.format(trust['alias'])
+    return s, m, new
+
+
+def java_trust_remove(trust):
+    remove = False
+    if 'state' in trust:
+        if trust['state'] == 'absent':
+            remove = True
+    return remove
+
+
+def java_facts_trusts(data, fcts):
+    trusts = []
+    for trust in data['versions'][data['version']]['trusts']:
+        if java_trust_remove(trust):
+            s, m, new = 'remove', 'Certificate state is absent', False
+        else:
+            trust = java_facts_trusts_download(data, fcts, trust)
+            trust = java_facts_trusts_export(data, fcts, trust)
+            s, m, new = trust_status(trust)
+        trust['status'] = s
+        trust['message'] = m
+        trust['new'] = new
+        trusts.append(trust)
+    fcts['java_versions'][data['version']]['trusts-status'] = \
+        trusts
+    return fcts
+
+
 def java_facts(data):
     fcts = {}
     fcts['java'] = {}
@@ -67,6 +153,8 @@ def java_facts(data):
     fcts['java_home'] = default_version['java_home']
     fcts['java_keytool'] = default_version['keytool']
     fcts['java_keystore'] = default_version['keystore']
+    if data['trusts'] is not None:
+        fcts = java_facts_trusts(data, fcts)
     return False, fcts, "Java facts set"
 
 
@@ -74,7 +162,8 @@ def main():
     fields = {
         "versions": {"required": True, "type": "dict"},
         "version": {"required": True, "type": "str"},
-        "alternatives": {"required": True, "type": "list"}
+        "alternatives": {"required": True, "type": "list"},
+        "trusts": {"required": False, "type": "dict"}
     }
 
     module = AnsibleModule(argument_spec=fields)
