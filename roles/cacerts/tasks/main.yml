@@ -24,14 +24,14 @@
   loop_control:
     loop_var: role_item # prevent variable collision
 
-- name: "Import certs for JDK"
-  include: jdk.yml
-  with_items: "{{ java_versions }}"
-  when: '"java" in ansible_role_names_cleaned'
-  vars:
-    jdk: "{{ java_versions[jdk_version_no] }}"
-  loop_control:
-    loop_var: jdk_version_no
+#- name: "Import certs for JDK"
+#  include: jdk.yml
+#  with_items: "{{ java_versions }}"
+#  when: '"java" in ansible_role_names_cleaned'
+#  vars:
+#    jdk: "{{ java_versions[jdk_version_no] }}"
+#  loop_control:
+#    loop_var: jdk_version_no
 
 - name: "Import certs for OS"
   include: os.yml
