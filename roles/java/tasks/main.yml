@@ -4,7 +4,6 @@
     version: "{{ java_version }}"
     versions: "{{ java_versions }}"
     alternatives: "{{ java_version_alternatives }}"
-  when: True
 
 - name: Install Java
   include: install.yml
