@@ -1,6 +1,6 @@
 # Ansible Role rest
 
-A simple Ansible Role that allows to interact with webservices using Ansible module [ansible.builtin.uri](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/uri_module.html). This role allows you to basically use [ansible.builtin.uri](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/uri_module.html) by providing a dict `rest_resources` which is used to configure groups of REST requests.
+A simple Ansible Role for interacting with webservices using Ansible module [ansible.builtin.uri](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/uri_module.html). This role allows you to basically use [ansible.builtin.uri](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/uri_module.html) by providing a dict `rest_resources` which is used to configure groups of webservices requests.
 
 <!-- MarkdownTOC levels="2,3" autolink="true" -->
 
@@ -107,6 +107,8 @@ Use of this variable allows you to redefine the vars to the namespace of your ro
     rest_base_url: "{{ am_rest_base_url }}"
     rest_enable: "{{ am_rest_enable|default(True) }}"
 ```
+
+Note: an example of a role that integrates this role is [am](https://github.com/c2platform/ansible-collection-forgerock/tree/master/roles/am) role of the [Ansible ForgeRock Collection](https://github.com/c2platform/ansible-collection-forgerock).
 
 ## Dependencies
 
