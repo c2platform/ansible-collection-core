@@ -1,0 +1,31 @@
+---
+- set_fact:
+    rest_headers: "{{ hostvars[inventory_hostname][rest_ansible_role + '_rest_headers']|default(omit) }}"
+    rest_method: "{{ hostvars[inventory_hostname][rest_ansible_role + '_rest_method']|default(omit) }}"
+    rest_timout: "{{ hostvars[inventory_hostname][rest_ansible_role + '_rest_timout']|default(omit) }}"
+    rest_validate_certs: "{{ hostvars[inventory_hostname][rest_ansible_role + '_rest_validate_certs']|default(omit) }}"
+    rest_base_url: "{{ hostvars[inventory_hostname][rest_ansible_role + '_rest_base_url']|default(omit) }}"
+    rest_enable: "{{ hostvars[inventory_hostname][rest_ansible_role + '_rest_enable']|default(omit) }}"
+  when: rest_ansible_role is defined
+
+- name: REST
+  uri:
+    url: "{{ rest_base_url }}{{ rest_resource['url'] }}"
+    method: "{{ rest_resource['method']|default(rest_method) }}"
+    headers: "{{ rest_resource['headers']|default(rest_resource_group['headers'])|default(rest_headers) }}"
+    timeout: "{{ rest_resource['timeout']|default(rest_timout) }}"
+    validate_certs: "{{ rest_validate_certs }}"
+    body_format: "{{ rest_resource['body_format']|default(omit) }}"
+    body: "{{ rest_resource['body']|default(omit) }}"
+    status_code: "{{ rest_resource['status_code']|default(omit) }}"
+  with_items: "{{ rest_resource_group['resources'] }}"
+  loop_control:
+    label: "{{ rest_resource_group_name }} {{ rest_resource['id'] }}"
+    loop_var: rest_resource
+  register: _rest_responses
+  changed_when: _rest_responses['status'] == rest_resource['changed_when']|default(201)
+
+- c2platform.core.set_rest_facts:
+    rest_responses: "{{ rest_responses }}"
+    rest_resource_group_name: "{{ rest_resource_group_name }}"
+    results: "{{ _rest_responses['results'] }}"

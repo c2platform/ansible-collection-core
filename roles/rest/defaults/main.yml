@@ -1,0 +1,5 @@
+---
+rest_responses: {}
+rest_method: POST
+rest_timout: 10
+rest_validate_certs: no
