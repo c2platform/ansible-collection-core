@@ -49,9 +49,9 @@
 - include_tasks: files_cat.yml
   with_items: "{{ common_files_set|selectattr('cat', 'defined')|list }}"
   loop_control:
-    label: "{{ item['dest'] }}"
+    label: "{{ file_cat['dest'] }}"
     loop_var: file_cat
-  when: not item|c2platform.core.file_exists_and_update_false(no_update_files)
+  when: not file_cat|c2platform.core.file_exists_and_update_false(no_update_files)
 
 - name: Absent file
   file:
