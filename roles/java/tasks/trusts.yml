@@ -3,13 +3,17 @@
   set_fact:
     jdk: "{{ java_versions[java_version_with_trusts] }}"
 
+- name: Set trusts
+  set_fact:
+    jdk_trusts: "{{ jdk['trusts']|default([])+java_trusts }}"
+
 - name: Download cert
   get_url:
     url: "{{ trust['url'] }}"
     checksum: "{{ trust['checksum']|default(omit) }}"
     dest: "/var/tmp/java-trust-{{ trust['url']|checksum }}"
     validate_certs: no
-  with_items: "{{ jdk['trusts']|selectattr('url', 'defined')|list }}"
+  with_items: "{{ jdk_trusts|selectattr('url', 'defined')|list }}"
   loop_control:
     label: "{{ trust['url'] }} → /var/tmp/java-trust-{{ trust['url']|checksum }}"
     loop_var: trust
@@ -19,7 +23,7 @@
   shell: >
     echo -n | openssl s_client -connect {{ trust['uri'] }}
     | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p'
-  with_items: "{{ jdk['trusts']|selectattr('uri', 'defined')|list }}"
+  with_items: "{{ jdk_trusts|selectattr('uri', 'defined')|list }}"
   loop_control:
     label: "{{ trust['uri'] }}"
     loop_var: trust
@@ -51,7 +55,7 @@
     -storepass {{ jdk['keystore_pass']|default('changeit') }}
     -noprompt
     -v
-  with_items: "{{ jdk['trusts'] }}"
+  with_items: "{{ jdk_trusts }}"
   when: trust['alias'] in java_jdk_keystore_aliases
   loop_control:
     label: "{{ jdk['keystore'] }}  → /var/tmp/java-trust-export-{{ trust['alias'] }}-{{ jdk['keytool']|checksum }}"
@@ -62,7 +66,7 @@
 - name: Slurp certificates # exported to /var/tmp
   ansible.builtin.slurp:
     src: "/var/tmp/java-trust-export-{{ trust['alias'] }}-{{ jdk['keytool']|checksum }}"
-  with_items: "{{ jdk['trusts'] }}"
+  with_items: "{{ jdk_trusts }}"
   when: trust['alias'] in java_jdk_keystore_aliases
   loop_control:
     label: "/var/tmp/java-trust-export-{{ trust['alias'] }}-{{ jdk['keytool']|checksum }}"
@@ -79,6 +83,10 @@
       downloads: "{{ _java_trust_download }}"
       downloads_uri: "{{ _java_trust_download_uri }}"
       exports: "{{ _jdk_exports_slurped }}"
+
+- name: Set jdk fact ( with trust-status )
+  set_fact:
+    jdk: "{{ java_versions[java_version_with_trusts] }}"
 
 - name: Write uri cert
   copy:

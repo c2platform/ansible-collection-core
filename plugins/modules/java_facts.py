@@ -163,7 +163,8 @@ def main():
         "versions": {"required": True, "type": "dict"},
         "version": {"required": True, "type": "str"},
         "alternatives": {"required": True, "type": "list"},
-        "trusts": {"required": False, "type": "dict"}
+        "trusts": {"required": False, "type": "dict"},
+        "java_trusts": {"required": False, "type": "list"}
     }
 
     module = AnsibleModule(argument_spec=fields)
