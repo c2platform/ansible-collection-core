@@ -79,6 +79,7 @@
     version: "{{ java_version_with_trusts }}"
     versions: "{{ java_versions }}"
     alternatives: "{{ java_version_alternatives }}"
+    java_trusts: "{{ java_trusts }}"
     trusts:
       downloads: "{{ _java_trust_download }}"
       downloads_uri: "{{ _java_trust_download_uri }}"
@@ -92,7 +93,7 @@
   copy:
     content: "{{ trust['downloaded']['cert'] }}"
     dest: "/var/tmp/java-trust-{{ trust['uri']|checksum }}"
-  with_items: "{{ jdk['trusts-status']|selectattr('uri','defined')|rejectattr('status','eq', 'remove')|list }}"
+  with_items: "{{ jdk['trusts-status']|selectattr('uri','defined')|rejectattr('status','eq', 'remove')|rejectattr('status','eq', 'fail')|list }}"
   loop_control:
     label: "{{ trust['uri'] }} → /var/tmp/java-trust-{{ trust['uri']|checksum }}"
     loop_var: trust
