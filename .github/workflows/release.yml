@@ -6,7 +6,7 @@ on: # yamllint disable-line rule:truthy
 jobs:
   releaseanddeploy:
     runs-on: ubuntu-latest
-    # if: github.repository == 'ansible-collection-core'
+    if: github.repository == 'ansible-collection-core'
     strategy:
       matrix:
         python-version: [3.8]
@@ -31,8 +31,8 @@ jobs:
           cp $files build/src
           cp -rf $directories build/src
         env:
-          files: "README.md LICENSE ansible.cfg galaxy.yml"
-          directories: "inventories playbooks roles vars"
+          files: "README.md LICENSE galaxy.yml"
+          directories: "plugins roles"
       - name: Build Ansible Collection
         run: ansible-galaxy collection build build/src --force
       - name: Create Release
