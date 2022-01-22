@@ -68,4 +68,4 @@ jobs:
           asset_content_type: application/tar+gzip
       - name: Deploy Ansible collection to Galaxy
         # run: ansible-galaxy collection publish c2platform-core-${{ steps.cversion.outputs.version }}.tar.gz --api-key ${{ secrets.GALAXY_API_KEY }}
-        run: ansible-galaxy collection c2platform-core-${{ steps.cversion.outputs.version }}.tar.gz --server https://galaxy-dev.ansible.com/ --api-key ${{ secrets.GALAXYDEV_API_KEY }}
+        run: ansible-galaxy collection publish c2platform-core-${{ steps.cversion.outputs.version }}.tar.gz --server https://galaxy-dev.ansible.com/ --api-key ${{ secrets.GALAXYDEV_API_KEY }}
