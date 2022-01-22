@@ -30,10 +30,10 @@ jobs:
       - name: Install test dependencies.
         run: pip3 install yamllint ansible==4.10.0 "ansible-lint[yamllint]"
 
-      - name: YAML lint
+      - name: Run YAML linter
         run: |
           yamllint -c .yamllint .
 
-      - name: Ansible lint
+      - name: Run Ansible linter
         run: |
           ansible-lint -c .ansible-lint
