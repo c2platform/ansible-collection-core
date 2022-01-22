@@ -6,7 +6,7 @@ on: # yamllint disable-line rule:truthy
 jobs:
   releaseanddeploy:
     runs-on: ubuntu-latest
-    if: github.repository == 'ansible-collection-core'
+    # if: github.repository == 'ansible-collection-core'
     strategy:
       matrix:
         python-version: [3.8]
