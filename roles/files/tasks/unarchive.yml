@@ -16,7 +16,7 @@
   with_items: "{{ common_unarchive_set }}"
   notify: "{{ item['notify']|default(omit) }}"
 
-- name: Shell ( after unarchive )
+- name: Shell ( after unarchive )  # noqa command-instead-of-shell
   ansible.builtin.shell:
     chdir: "{{ item['chdir']|default(omit) }}"
     cmd: "{{ item['cmd'] }}"

@@ -1,5 +1,6 @@
 ---
-- set_fact:
+- name: cacerts2_certificates
+  set_fact:
     cacerts2_certificates: "{{ hostvars[inventory_hostname][cacerts2_role_name + '_' + 'cacerts2_certificates'] }}"
 
 - name: Set various certificate facts
@@ -11,7 +12,8 @@
     hostname: "{{ ansible_hostname }}"
     role_name: "{{ cacerts2_role_name }}"
 
-- set_fact:
+- name: cacerts2_certificates
+  set_fact:
     cacerts2_certificates: "{{ hostvars[inventory_hostname][cacerts2_role_name + '_' + 'cacerts2_certificates'] }}"
 
 - include_tasks: certs/certs_group.yml

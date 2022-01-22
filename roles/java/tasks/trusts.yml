@@ -19,7 +19,7 @@
     loop_var: trust
   register: _java_trust_download
 
-- name: Get cert ( uri )
+- name: Get cert ( uri )  # noqa risky-shell-pipe
   shell: >
     echo -n | openssl s_client -connect {{ trust['uri'] }}
     | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p'
@@ -30,7 +30,7 @@
   changed_when: False
   register: _java_trust_download_uri
 
-- name: Get aliases in keystore
+- name: Get aliases in keystore  # noqa risky-shell-pipe
   shell: >
     {{ jdk['keytool'] }}
     -list
@@ -93,6 +93,7 @@
   copy:
     content: "{{ trust['downloaded']['cert'] }}"
     dest: "/var/tmp/java-trust-{{ trust['uri']|checksum }}"
+    mode: "0755"
   with_items: "{{ jdk['trusts-status']|selectattr('uri','defined')|rejectattr('status','eq', 'remove')|rejectattr('status','eq', 'fail')|list }}"
   loop_control:
     label: "{{ trust['uri'] }} → /var/tmp/java-trust-{{ trust['uri']|checksum }}"

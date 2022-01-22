@@ -1,4 +1,4 @@
 ---
-- name: Git checkout
+- name: Git checkout  # noqa git-latest
   ansible.builtin.git: "{{ common_git_repo }}"
   # changed_when: False

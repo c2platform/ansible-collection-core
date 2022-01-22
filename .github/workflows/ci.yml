@@ -1,5 +1,5 @@
 ---
-name: Linters
+name: Linters ( Ansible, YAML )
 on:
   pull_request:
   push:
@@ -22,14 +22,18 @@ jobs:
         with:
           path: 'c2platform.core'
 
-      - name: Set up Python 3.
+      - name: Set up Python 3
         uses: actions/setup-python@v2
         with:
           python-version: '3.x'
 
       - name: Install test dependencies.
-        run: pip3 install yamllint
+        run: pip3 install yamllint "ansible-lint[yamllint]"
 
-      - name: Lint code.
+      - name: YAML lint
         run: |
-          yamllint .
+          yamllint -c .yamllint .
+
+      - name: Ansible lint
+        run: |
+          ansible-lint -c .ansible-lint

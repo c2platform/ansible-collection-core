@@ -1,5 +1,6 @@
 ---
-- set_fact:
+- name: Facts rest_headers, rest_method etc
+  set_fact:
     rest_headers: "{{ hostvars[inventory_hostname][rest_ansible_role + '_rest_headers']|default(omit) }}"
     rest_method: "{{ hostvars[inventory_hostname][rest_ansible_role + '_rest_method']|default(omit) }}"
     rest_timout: "{{ hostvars[inventory_hostname][rest_ansible_role + '_rest_timout']|default(omit) }}"
@@ -25,7 +26,8 @@
   register: _rest_responses
   changed_when: _rest_responses['status'] == rest_resource['changed_when']|default(201)
 
-- c2platform.core.set_rest_facts:
+- name: REST facts
+  c2platform.core.set_rest_facts:
     rest_responses: "{{ rest_responses }}"
     rest_resource_group_name: "{{ rest_resource_group_name }}"
     results: "{{ _rest_responses['results'] }}"

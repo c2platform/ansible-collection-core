@@ -1,5 +1,6 @@
 ---
-- set_fact:
+- name: Fact _services
+  set_fact:
     _services: "{{ services|default([service]) }}"
 
 - name: Configure systemd service

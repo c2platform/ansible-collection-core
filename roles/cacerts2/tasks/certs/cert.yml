@@ -1,14 +1,17 @@
 ---
 - block:
-  - stat:
+  - name: Stat key
+    stat:
       path: "{{ cacerts2_ca_domain['key'] }}"
     register: ca_key
 
-  - stat:
+  - name: Stat crt
+    stat:
       path: "{{ cacerts2_ca_domain['crt'] }}"
     register: ca_crt
 
-  - stat:
+  - name: Stat dir
+    stat:
       path: "{{ cacerts2_certificate['dir'] }}"
     register: _cacerts2_certificate_dir
 

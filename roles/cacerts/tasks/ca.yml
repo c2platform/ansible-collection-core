@@ -1,8 +1,10 @@
 ---
-- set_fact:
+- name: cacerts_dir_domain
+  set_fact:
     cacerts_dir_domain: "{{ cacerts_ca_dir }}/{{ domain }}"
 
-- stat:
+- name: Stat domain key
+  stat:
     path: "{{ cacerts_dir_domain }}/ca-{{ domain }}.key"
   register: cacerts_dir_domain_key
 
@@ -37,7 +39,7 @@
           - clientAuth
           - serverAuth
         common_name: "{{ domain }}"
-        force: "{{cacerts_overwrite|default(False)}}"
+        force: "{{ cacerts_overwrite|default(False) }}"
       register: ca_csr
 
     - name: Sign the CA CSR
