@@ -4,6 +4,7 @@
     version: "{{ java_version }}"
     versions: "{{ java_versions }}"
     alternatives: "{{ java_version_alternatives }}"
+    java_trusts: "{{ java_trusts }}"
 
 - name: Install Java
   include: install.yml
@@ -32,4 +33,4 @@
   with_items: "{{ java_install_archives + java_install_packages }}"
   loop_control:
     loop_var: java_version_with_trusts
-  when: java_versions[java_version_with_trusts]['trusts'] is defined
+  when: java_versions[java_version_with_trusts]['trusts'] is defined or java_trusts|length > 0

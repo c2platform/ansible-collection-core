@@ -1,0 +1,12 @@
+---
+- set_fact:
+    rest_resources: "{{ hostvars[inventory_hostname][rest_ansible_role + '_rest_resources']|default(omit) }}"
+  when: rest_ansible_role is defined
+
+- include_tasks: "rest.yml"
+  with_items: '{{ rest_resources|sort }}'
+  loop_control:
+    loop_var: rest_resources_group_name
+  vars:
+    rest_resource_group: "{{ rest_resources[rest_resources_group_name] }}"
+    rest_resource_group_name: "{{ rest_resources_group_name }}"

@@ -43,7 +43,6 @@ def java_path(java_home, rel_path):
 def java_facts_trusts_export(data, fcts, trust):
     trust['exported'] = {}
     trust['exported']['status'] = False
-    # trust['exported']['cert'] = None
     trust['exported']['sha256'] = None
     for exp in data['trusts']['exports']['results']:
         if trust['alias'] == exp['trust']['alias']:
@@ -61,6 +60,7 @@ def java_facts_trusts_export(data, fcts, trust):
 def java_facts_trusts_download(data, fcts, trust):
     trust['downloaded'] = {}
     trust['downloaded']['status'] = False
+    trust['downloaded']['sha256'] = None
     for dwnld in data['trusts']['downloads_uri']['results']:
         if trust['alias'] == dwnld['trust']['alias']:
             if 'BEGIN CERTIFICATE' in dwnld['stdout']:
@@ -96,6 +96,9 @@ def trust_status(trust):
     if ds and es and dsum == esum:
         s = "ok"
         m = 'Certificate alias {} is current'.format(trust['alias'])
+    if not ds and not es:
+        s = "fail"
+        m = 'Certificate alias {} failed to download'.format(trust['alias'])
     return s, m, new
 
 
@@ -109,7 +112,9 @@ def java_trust_remove(trust):
 
 def java_facts_trusts(data, fcts):
     trusts = []
-    for trust in data['versions'][data['version']]['trusts']:
+    trusts_config = data['versions'][data['version']]['trusts']
+    trusts_config += data['java_trusts']
+    for trust in trusts_config:
         if java_trust_remove(trust):
             s, m, new = 'remove', 'Certificate state is absent', False
         else:
@@ -163,7 +168,8 @@ def main():
         "versions": {"required": True, "type": "dict"},
         "version": {"required": True, "type": "str"},
         "alternatives": {"required": True, "type": "list"},
-        "trusts": {"required": False, "type": "dict"}
+        "trusts": {"required": False, "type": "dict"},
+        "java_trusts": {"required": False, "type": "list"}
     }
 
     module = AnsibleModule(argument_spec=fields)

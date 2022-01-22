@@ -105,6 +105,19 @@ java_versions:
 
 Note: this role will also update certificates whenever necessary. 
 
+You can also define trusts globally for all `java_versions` using `java_trusts`
+
+```yaml
+java_trusts:
+  - alias: youtube
+    uri: youtube.com:443
+    state: absent
+  - alias: duckduckgo
+    uri: duckduckgo.com:443
+  - alias: isrgrootx1
+    url: https://letsencrypt.org/certs/isrgrootx1.pem
+```
+
 ### Etc profile.d JAVA_HOME
 
 You can set `JAVA_HOME` in `/etc/profile.d/java.sh` using var `java_home_etc_profile`.

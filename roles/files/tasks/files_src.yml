@@ -8,6 +8,8 @@
     owner: "{{ item['owner']|default(omit) }}"
     group: "{{ item['group']|default(omit) }}"
   with_items: "{{ common_files_set|selectattr('src', 'defined')|selectattr('delegate', 'undefined')|list }}"
+  loop_control:
+    label: "{{ item['src'] }} → {{ item['dest'] }}"
   notify: "{{ item['notify']|default(omit) }}"
   environment: "{{ item['environment']|default({}) }}"
 
@@ -18,6 +20,8 @@
     checksum: "{{ item['checksum']|default(omit) }}"
     dest: "{{ common_files_tmp }}/{{ item['src']|checksum }}"
   with_items: "{{ common_files_set|selectattr('src', 'defined')|selectattr('delegate', 'defined')|list }}"
+  loop_control:
+    label: "{{ item['src'] }} → {{ common_files_tmp }}/{{ item['src']|checksum }}"
   delegate_to: localhost
   environment: "{{ item['environment']|default({}) }}"
 
@@ -29,4 +33,6 @@
     group: "{{ item['group']|default(omit) }}"
     mode: "{{ item['mode']|default('0755') }}"
   with_items: "{{ common_files_set|selectattr('src', 'defined')|selectattr('delegate', 'defined')|list }}"
+  loop_control:
+    label: "{{ common_files_tmp }}/{{ item['src']|checksum }} → {{ item['dest'] }}"
   notify: "{{ item['notify']|default(omit) }}"

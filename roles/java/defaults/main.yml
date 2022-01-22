@@ -19,3 +19,4 @@ java_versions:
       package: yes
       folder: java-8-openjdk-amd64
       keystore: jre/lib/security/cacerts
+java_trusts: []

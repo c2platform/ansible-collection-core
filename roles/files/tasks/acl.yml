@@ -9,3 +9,5 @@
     recursive: "{{ item['recursive']|default(omit) }}"
     state: "{{ item['state']|default(omit) }}"
   with_items: "{{ common_acl_set }}"
+  loop_control:
+    label: "{{ item['path'] }}"

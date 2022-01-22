@@ -10,3 +10,5 @@
     attributes: "{{ item['attributes']|default(omit) }}"
     mode: "{{ item['mode']|default('0755') }}"
   with_items: "{{ common_directories_set }}"
+  loop_control:
+    label: "{{ item['path'] }}"
