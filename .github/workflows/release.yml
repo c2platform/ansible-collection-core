@@ -1,5 +1,5 @@
 ---
-name: Release and Deploy collection
+name: Release and deploy to Galaxy
 on: # yamllint disable-line rule:truthy
   workflow_dispatch:
 
@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Get current version
         id: cversion
-        run: echo "::set-output name=version::$(grep version galaxy.yml | awk -F':' '{ print $2 }')"
+        run: echo "::set-output name=version::$(grep version galaxy.yml | awk -F'"' '{ print $2 }')"
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
@@ -35,7 +35,7 @@ jobs:
           directories: "plugins roles"
       - name: Build Ansible Collection
         run: ansible-galaxy collection build build/src --force
-      - name: Create Release
+      - name: Create release
         id: create_release
         uses: actions/create-release@v1
         env:
