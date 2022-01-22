@@ -53,7 +53,7 @@ jobs:
             The requirements.yml needs to have the following format and content:
             ---
             collections:
-                - https://github.com/c2platform/ansible-collection-core/releases/download/v${{ steps.cversion.outputs.version }}/imjoseangel-common-${{ steps.cversion.outputs.version }}.tar.gz
+                - https://github.com/c2platform/ansible-collection-core/releases/download/v${{ steps.cversion.outputs.version }}/c2platform-core-${{ steps.cversion.outputs.version }}.tar.gz
           draft: false
           prerelease: false
       - name: Upload Release Asset
