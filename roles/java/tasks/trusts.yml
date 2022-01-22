@@ -44,7 +44,7 @@
   set_fact:
     java_jdk_keystore_aliases: "{{ _jdk_keystore_aliases['stdout_lines'] }}"
 
-- name: Export certificates # in keystore
+- name: Export certificates  # in keystore
   shell: >
     {{ jdk['keytool'] }}
     -exportcert
@@ -63,7 +63,7 @@
   changed_when: False
   register: _jdk_keystore_aliases_export
 
-- name: Slurp certificates # exported to /var/tmp
+- name: Slurp certificates  # exported to /var/tmp
   ansible.builtin.slurp:
     src: "/var/tmp/java-trust-export-{{ trust['alias'] }}-{{ jdk['keytool']|checksum }}"
   with_items: "{{ jdk_trusts }}"
@@ -122,8 +122,8 @@
     state: absent
   with_items: "{{ jdk['trusts-status']|selectattr('status','equalto','update')|list }}"
   loop_control:
-     label: "{{ jdk['keystore'] }} {{ trust['alias'] }} "
-     loop_var: trust
+    label: "{{ jdk['keystore'] }} {{ trust['alias'] }} "
+    loop_var: trust
   notify: "{{ jdk['notify']|default(omit) }}"
 
 - name: Add updated cert to keystore

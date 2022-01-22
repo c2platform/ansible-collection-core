@@ -22,7 +22,7 @@
   vars:
     role: "{{ role_item }}"
   loop_control:
-    loop_var: role_item # prevent variable collision
+    loop_var: role_item  # prevent variable collision
 
 - name: "Import certs for JDK"
   include: jdk.yml

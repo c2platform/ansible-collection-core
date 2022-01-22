@@ -28,7 +28,7 @@
         state: present
       with_items: "{{ cacerts_trusted_sites }}"
       notify: "{{ item['notify']|default(omit) }}"
-      #register: jdk_trusted_sites # cmd, msg, rc
+      # register: jdk_trusted_sites # cmd, msg, rc
       ignore_errors: yes
       # environment: "{{ cacerts_java_cert_environment|default(omit) }}" # TODO
   when: keystore.stat.exists

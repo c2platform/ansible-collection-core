@@ -8,3 +8,5 @@
     state: "{{ item['state'] }}"
   with_items: '{{ nfs_mounts }}'
   ignore_errors: True
+  loop_control:
+    label: "{{ item['path'] }}"

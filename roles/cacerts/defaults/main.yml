@@ -20,23 +20,23 @@ cacerts_roles:
     executable: "{{ bitbucket_home_version_app|default(omit) }}/jre/bin/keytool"
 
 cacerts_trusted_sites: []
-#cacerts_trusted_sites:
-#  - name: google-keystore-alias 
-#    url: google.com
-#    port: 443
+# cacerts_trusted_sites:
+#   - name: google-keystore-alias
+#     url: google.com
+#     port: 443
 
 cacerts_import_certs_urls: []
-#cacerts_import_certs_urls:
-#  - name: mycompanybundle
-#    url: https://example.com/SectigoRSADVBundle.crt
+# cacerts_import_certs_urls:
+#   - name: mycompanybundle
+#     url: https://example.com/SectigoRSADVBundle.crt
 
-# Workaround for bug in java_cert
-# java_cert will pick up system proxy settings but this
-# does not work see https://github.com/ansible/ansible/issues/54481
-#cacerts_java_cert_environment: # no protocol http
-#  https_proxy: 1.1.1.3:3128
-#cacerts_java_cert_environment:
-#  dummy: value #  pass some setting to suppress WARNING
+#  Workaround for bug in java_cert
+#  java_cert will pick up system proxy settings but this
+#  does not work see https://github.com/ansible/ansible/issues/54481
+# cacerts_java_cert_environment: # no protocol http
+#   https_proxy: 1.1.1.3:3128
+# cacerts_java_cert_environment:
+#   dummy: value #  pass some setting to suppress WARNING
 
 # CA server
 cacerts_overwrite: no

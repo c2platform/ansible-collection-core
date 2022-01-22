@@ -12,7 +12,7 @@
       path: "{{ cacerts2_certificate['dir'] }}"
     register: _cacerts2_certificate_dir
 
-  - name: Create dir for key, crt etc # e.g. /vagrant/.ca/c2d/c2d/apache
+  - name: Create dir for key, crt etc  # e.g. /vagrant/.ca/c2d/c2d/apache
     file:
       path: "{{ cacerts2_certificate['dir'] }}"
       state: directory
@@ -20,7 +20,7 @@
       recurse: yes
     when: not _cacerts2_certificate_dir.stat.exists
 
-  - name: Generate an OpenSSL private key # with the default values (4096 bits, RSA)
+  - name: Generate an OpenSSL private key  # with the default values (4096 bits, RSA)
     community.crypto.openssl_privatekey:
       path: "{{ cacerts2_certificate['create']['key'] }}"
       force: "{{ cacerts2_certificate['force']|default(False) }}"

@@ -1,5 +1,5 @@
 ---
-- name: Copy to controle node ( fetch ) # from caserver
+- name: Copy to controle node ( fetch )  # from caserver
   ansible.builtin.fetch:
     src: "{{ cacerts2_certificate['create'][ext] }}"
     dest: /tmp/
