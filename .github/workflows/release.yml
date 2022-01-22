@@ -32,7 +32,7 @@ jobs:
           cp -rf $directories build/src
         env:
           files: "README.md LICENSE galaxy.yml"
-          directories: "plugins roles"
+          directories: "plugins roles meta"
       - name: Build Ansible Collection
         run: ansible-galaxy collection build build/src --force
       - name: Create release
