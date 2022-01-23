@@ -3,7 +3,7 @@
   systemd:
     daemon_reload: true
   changed_when: false
-  ignore_errors: true
+  failed_when: false
 
 - name: APT update
   apt:
@@ -13,7 +13,7 @@
   when: ansible_os_family == "Debian"
   listen: Update CA certificates
 
-- name: Update CA certificates
+- name: Update CA certificates  # noqa command-instead-of-shell
   shell: /usr/sbin/update-ca-certificates
   when: ansible_os_family == "Debian"
   listen: Update CA certificates

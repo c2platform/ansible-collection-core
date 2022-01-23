@@ -18,20 +18,22 @@
   when: ansible_os_family == 'RedHat'
 
 - block:
-  - name: CA distribute ( Debian )
-    get_url:
-      url: '{{ item }}'
-      dest: '/usr/local/share/ca-certificates/{{ item|basename }}'
-    when: cacerts_os_ca_pem_urls is defined
-    with_items: "{{ cacerts_os_ca_pem_urls }}"
-    register: cadownload
-    notify: Update CA certificates
+    - name: CA distribute ( Debian )
+      get_url:
+        url: '{{ item }}'
+        dest: '/usr/local/share/ca-certificates/{{ item|basename }}'
+      when: cacerts_os_ca_pem_urls is defined
+      with_items: "{{ cacerts_os_ca_pem_urls }}"
+      register: cadownload
+      notify: Update CA certificates
 
-  - name: Execute update-ca-certificates
-    command: update-ca-certificates
-    with_items: '{{ cadownload.results }}'
-    when:
-      - cadownload.results is defined
-      - item.changed
-      - cacerts_os_ca_pem_urls is defined
+    - name: Execute update-ca-certificates
+      command: update-ca-certificates
+      with_items: '{{ cadownload.results }}'
+      loop_control:
+        label: "{{ item['url'] }}"
+      when:
+        - cadownload.results is defined
+        - item.changed
+        - cacerts_os_ca_pem_urls is defined
   when: ansible_os_family == 'Debian'

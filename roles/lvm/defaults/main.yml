@@ -1,6 +1,6 @@
 ---
-lvm_vg: 'data' # name of volume group
-lvm_vg_devices: ['sdx'] # list of devices to use for volume group
+lvm_vg: 'data'  # name of volume group
+lvm_vg_devices: ['sdx']  # list of devices to use for volume group
 lvm_fstype: 'ext4'
 
 # Roles ( external / internal) supported by this lvm role
@@ -48,7 +48,7 @@ lvm_roles:
   sites:
     size: '10g'
     path: '/var/www/html'
-  docker: # geerlingguy.docker
+  docker:  # geerlingguy.docker
     size: '10g'
     path: '/var/lib/docker'
   awx:

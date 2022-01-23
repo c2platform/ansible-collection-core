@@ -3,7 +3,7 @@
 # ansible_os_family and ansible_distribution_major_version
 # e.g. CentOS 7, Red Hat 7, Ubuntu ..
 common_packages:
-  RedHat 7: ['python-pip','python-setuptools','openssl','unzip']
+  RedHat 7: ['python-pip', 'python-setuptools', 'openssl', 'unzip']
 
 common_packages_extra:
   RedHat 7: []
@@ -17,14 +17,14 @@ common_pip_packages:
 common_pip_packages_extra: []
 
 common_ansible_user: ansible
-common_ansible_user_password: $1$tBPdczeQ$Kca8G0jWZ4fyGsgCtZD5F/ # supersecure
+common_ansible_user_password: $1$tBPdczeQ$Kca8G0jWZ4fyGsgCtZD5F/  # supersecure
 common_ansible_user_create: false
 common_ansible_user_expires: -1
 
 # common_ansible_authorized_keys: https://raw.githubusercontent.com/hashicorp/vagrant/master/keys/vagrant.pub
 
 # Configure custom prompt
-#common_terminal_prompt: "\e[01;31m[\u@{{ inventory_hostname }}\h \w]\\$\e[m "
+# common_terminal_prompt: "\e[01;31m[\u@{{ inventory_hostname }}\h \w]\\$\e[m "
 
 common_authorized_key_validate_certs: no
 

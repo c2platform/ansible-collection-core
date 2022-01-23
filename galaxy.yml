@@ -1,17 +1,20 @@
-
+---
 namespace: c2platform
 name: core
-
-version: 1.0.0
-
+version: "0.1.0"
+readme: README.md
 authors:
-- Onno van der Straaten (https://github.com/onknows)
+  - Onno van der Straaten (onno@onknows.com)
+license_file: LICENSE
 
 description: C2 Platform Ansible Collection with Core Roles, Modules, Filters
-license_file: LICENSE
-readme: README.md
 
-tags: []
+tags:
+  - c2platform
+  - common
+  - core
+  - collection
+  - linux
 
 dependencies: {}
 

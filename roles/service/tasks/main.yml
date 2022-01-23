@@ -1,12 +1,13 @@
 ---
-- set_fact:
+- name: Fact _services
+  set_fact:
     _services: "{{ services|default([service]) }}"
 
 - name: Configure systemd service
   template:
     src: "systemd.j2"
     dest: "/etc/systemd/system/{{ _service['Name']|default(_service['name']) }}.service"
-    #dest: "/vagrant/{{ _service['Name']|default(_service['name']) }}.service"
+    # dest: "/vagrant/{{ _service['Name']|default(_service['name']) }}.service"
     mode: "0644"
   notify: systemctl daemon-reload
   loop: "{{ _services }}"

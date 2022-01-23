@@ -6,7 +6,8 @@
     ca_domain: "{{ cacerts2_ca_domain }}"
     hostname: "{{ ansible_hostname }}"
 
-- stat:
+- name: Stat key
+  stat:
     path: "{{ cacerts2_ca_domain['key'] }}"
   register: cacerts2_ca_private_key_path_stat
 
@@ -44,7 +45,7 @@
           - clientAuth
           - serverAuth
         common_name: "{{ cacerts2_ca_domain['common_name'] }}"
-        force: "{{cacerts2_overwrite|default(False)}}"
+        force: "{{ cacerts2_overwrite|default(False) }}"
       register: ca_csr
 
     - name: Sign the CA CSR

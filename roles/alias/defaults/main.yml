@@ -25,7 +25,7 @@ alias:
       configs:
         - "/etc/systemd/system/myapp.service"
     proxy:
-      logs: ["/var/log/squid/*.log","/var/log/squid/squid.out"]
+      logs: ["/var/log/squid/*.log", "/var/log/squid/squid.out"]
       configs:
         - "{{ squid_config_directory | default(omit) }}/{{ squid_config_file | default(omit) }}"
         - "{{ proxy_allowd_ips_file | default(omit) }}"

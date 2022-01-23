@@ -1,5 +1,6 @@
 ---
-- set_fact:
+- name: Fact rest_resources
+  set_fact:
     rest_resources: "{{ hostvars[inventory_hostname][rest_ansible_role + '_rest_resources']|default(omit) }}"
   when: rest_ansible_role is defined
 
