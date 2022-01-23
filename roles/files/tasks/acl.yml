@@ -4,7 +4,7 @@
     path: "{{ item['path'] }}"
     entity: "{{ item['entity']|default(omit) }}"
     etype: "{{ item['etype'] }}"
-    permissions: "{{ item['permission'] }}"
+    permissions: "{{ item['permission']|default(omit) }}"
     default: "{{ item['default']|default(omit) }}"
     recursive: "{{ item['recursive']|default(omit) }}"
     state: "{{ item['state']|default(omit) }}"
