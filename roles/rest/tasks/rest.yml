@@ -20,6 +20,7 @@
     body: "{{ rest_resource['body']|default(omit) }}"
     status_code: "{{ rest_resource['status_code']|default(omit) }}"
   with_items: "{{ rest_resource_group['resources'] }}"
+  ignore_errors: "{{ rest_resource['ignore_errors']|default(False) }}"
   loop_control:
     label: "{{ rest_resource_group_name }} {{ rest_resource['id'] }}"
     loop_var: rest_resource
