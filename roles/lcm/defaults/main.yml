@@ -9,5 +9,6 @@ lcm_roles:
   - awx
   - myapp
   - keycloak
+  - nextcloud
 
 lcm_write_version_file: no

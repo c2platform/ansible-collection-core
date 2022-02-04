@@ -19,6 +19,7 @@ lvm_roles_supported:
   - guacamole
   - docker
   - reverse_proxy
+  - nextcloud
 
 lvm_roles:
   nfs:
@@ -63,3 +64,6 @@ lvm_roles:
   reverse_proxy:
     size: '1g'
     path: '/var/log/httpd/'
+  nextcloud:
+    size: '10g'
+    path: "{{ nextcloud_home|default('/opt/nextcloud') }}"
