@@ -2,7 +2,7 @@
 - name: Stat no update files
   stat:
     path: "{{ item['dest'] }}"
-  with_items: "{{ common_files_set|selectattr('update', 'equalto', False)|list }}"
+  with_items: "{{ common_files_set|selectattr('update', 'defined')|selectattr('update', 'equalto', False)|list }}"
   loop_control:
     label: "{{ item['dest'] }}"
   register: no_update_files
@@ -60,4 +60,15 @@
   with_items: "{{ common_files_set|selectattr('state', 'defined')|selectattr('state', 'eq', 'absent')|list }}"
   loop_control:
     label: "{{ item['dest'] }}"
+  notify: "{{ item['notify']|default(omit) }}"
+
+- name: Link
+  file:
+    src: "{{ item['path'] }}"
+    path: "{{ item['link'] }}"
+    state: link
+    force: "{{ item['force']|default(omit) }}"
+  with_items: "{{ common_files_set|selectattr('link', 'defined')|list }}"
+  loop_control:
+    label: "{{ item['path'] }}"
   notify: "{{ item['notify']|default(omit) }}"
