@@ -70,5 +70,5 @@
     force: "{{ item['force']|default(omit) }}"
   with_items: "{{ common_files_set|selectattr('link', 'defined')|list }}"
   loop_control:
-    label: "{{ item['path'] }}"
+    label: "{{ item['link'] }} → {{ item['path'] }}"
   notify: "{{ item['notify']|default(omit) }}"
