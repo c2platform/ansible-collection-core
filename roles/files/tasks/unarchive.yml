@@ -14,6 +14,8 @@
     validate_certs: "{{ item['validate_certs']|default(omit) }}"
     state: "{{ item['state']|default(omit) }}"
   with_items: "{{ common_unarchive_set }}"
+  loop_control:
+    label: "{{ item['src'] }} → {{ item['dest'] }}"
   notify: "{{ item['notify']|default(omit) }}"
 
 - name: Shell ( after unarchive )  # noqa command-instead-of-shell

@@ -12,4 +12,5 @@
   notify: systemctl daemon-reload
   loop: "{{ _services }}"
   loop_control:
+    label: "{{ _service['Name']|default(_service['name']) }}"
     loop_var: _service
