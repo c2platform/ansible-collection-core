@@ -28,6 +28,15 @@
     stdin: "{{ item['stdin']|default(omit) }}"
     stdin_add_newline: "{{ item['stdin_add_newline']|default(omit) }}"
     warn: "{{ item['warn']|default(omit) }}"
+  register: _shell_after_unarchive
   with_items: "{{ common_unarchive_set|selectattr('shell', 'defined')|map(attribute='shell')|list }}"
+  ignore_errors: "{{ item['ignore_errors']|default(omit) }}"
+  loop_control:
+    label: "{{ common_unarchive_set_item }}"
   notify: "{{ item['notify']|default(omit) }}"
-  register: _shell
+
+- name: Log shell results
+  copy: # debug
+    content: "{{ {'_shell_after_unarchive': _shell_after_unarchive }|to_nice_yaml }}"
+    dest: "/tmp/{{ common_unarchive_set_item }}_{{ ansible_date_time.iso8601_basic }}.yml"
+  when: _shell_after_unarchive.failed|default(False)
