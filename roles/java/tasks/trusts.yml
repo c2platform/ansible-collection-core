@@ -89,6 +89,7 @@
   copy:
     content: "{{ {'java_versions': java_versions }|to_nice_yaml }}"
     dest: /var/tmp/java_versions.yml
+  changed_when: false
 
 - name: Set jdk fact ( with trust-status )
   set_fact:
