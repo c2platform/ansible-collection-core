@@ -85,6 +85,10 @@
       downloads_uri: "{{ _java_trust_download_uri }}"
       exports: "{{ _jdk_exports_slurped }}"
 
+- copy:
+    content: "{{ {'java_versions': java_versions }|to_nice_yaml }}"
+    dest: /var/tmp/java_versions.yml
+
 - name: Set jdk fact ( with trust-status )
   set_fact:
     jdk: "{{ java_versions[java_version_with_trusts] }}"
