@@ -36,7 +36,8 @@
   notify: "{{ item['notify']|default(omit) }}"
 
 - name: Log shell results
-  copy: # debug
+  copy:  # debug
     content: "{{ {'_shell_after_unarchive': _shell_after_unarchive }|to_nice_yaml }}"
     dest: "/tmp/{{ common_unarchive_set_item }}_{{ ansible_date_time.iso8601_basic }}.yml"
+    mode: 0644
   when: _shell_after_unarchive.failed|default(False)
