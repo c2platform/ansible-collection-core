@@ -5,3 +5,5 @@
     query: update pg_database SET datallowconn = 'true' WHERE datname = %s
     positional_args:
       - "{{ allow_database }}"
+  vars:
+    ansible_ssh_pipelining: true

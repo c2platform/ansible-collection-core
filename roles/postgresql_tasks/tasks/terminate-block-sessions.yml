@@ -5,6 +5,8 @@
     query: update pg_database SET datallowconn = 'false' WHERE datname = %s
     positional_args:
       - "{{ terminate_database }}"
+  vars:
+    ansible_ssh_pipelining: true
 
 - name: Terminate sessions
   postgresql_query:
@@ -12,3 +14,5 @@
     query: select pg_terminate_backend(pid) from pg_stat_activity where datname = %s
     positional_args:
       - "{{ terminate_database }}"
+  vars:
+    ansible_ssh_pipelining: true
