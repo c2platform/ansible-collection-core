@@ -1,0 +1,24 @@
+---
+- name: Set facts
+  set_fact:
+    common_facts_gather_hosts: "{{ hostvars[inventory_hostname][common_facts_role_name+'_facts_gather_hosts'] }}"
+    common_facts_filter: "{{ hostvars[inventory_hostname][common_facts_role_name+'_facts_filter']|default(omit) }}"
+  when: common_facts_role_name is defined
+
+- name: Gather facts
+  ansible.builtin.setup:
+    filter: "{{ common_facts_filter|default(omit) }}"
+  delegate_to: "{{ item }}"
+  delegate_facts: true
+  loop: "{{ common_facts_gather_hosts }}"
+  register: _facts
+
+- name: Set facts
+  set_fact:
+    common_facts: "{{ _facts['results']|default([]) }}"
+  when: common_facts_role_name is not defined
+
+- name: Set facts
+  set_fact:
+    "{{ common_facts_role_name }}_facts_hosts": "{{ _facts['results']|default([]) }}"
+  when: common_facts_role_name is defined
