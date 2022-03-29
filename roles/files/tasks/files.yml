@@ -12,8 +12,8 @@
     content: "{{ item['content'] }}"
     dest: "{{ item['dest'] }}"
     mode: "{{ item['mode']|default('0755') }}"
-    owner: "{{ item['owner']|default(omit) }}"
-    group: "{{ item['group']|default(omit) }}"
+    owner: "{{ item['owner']|default(common_files_owner) }}"
+    group: "{{ item['group']|default(common_files_group) }}"
   with_items: "{{ common_files_set|selectattr('content', 'defined')|list }}"
   loop_control:
     label: "{{ item['dest'] }}"

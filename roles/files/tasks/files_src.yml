@@ -5,8 +5,8 @@
     checksum: "{{ item['checksum']|default(omit) }}"
     dest: "{{ item['dest'] }}"
     mode: "{{ item['mode']|default('0755') }}"
-    owner: "{{ item['owner']|default(omit) }}"
-    group: "{{ item['group']|default(omit) }}"
+    owner: "{{ item['owner']|default(common_files_owner) }}"
+    group: "{{ item['group']|default(common_files_group) }}"
   with_items: "{{ common_files_set|selectattr('src', 'defined')|selectattr('delegate', 'undefined')|list }}"
   loop_control:
     label: "{{ item['src'] }} → {{ item['dest'] }}"
@@ -29,8 +29,8 @@
   ansible.builtin.copy:
     src: "{{ common_files_tmp }}/{{ item['src']|checksum }}"
     dest: "{{ item['dest'] }}"
-    owner: "{{ item['owner']|default(omit) }}"
-    group: "{{ item['group']|default(omit) }}"
+    owner: "{{ item['owner']|default(common_files_owner) }}"
+    group: "{{ item['group']|default(common_files_group) }}"
     mode: "{{ item['mode']|default('0755') }}"
   with_items: "{{ common_files_set|selectattr('src', 'defined')|selectattr('delegate', 'defined')|list }}"
   loop_control:
