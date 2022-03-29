@@ -18,7 +18,7 @@
     common_facts: "{{ _facts['results']|default([]) }}"
   when: common_facts_role_name is not defined
 
-- name: Set facts
+- name: Set facts  # noqa var-naming
   set_fact:
     "{{ common_facts_role_name }}_facts_hosts": "{{ _facts['results']|default([]) }}"
   when: common_facts_role_name is defined
