@@ -35,10 +35,7 @@ For example let's say we want to provide [CRL](https://en.wikipedia.org/wiki/Cer
     name: c2platform.core.files
     tasks_from: main
   vars:
-    role_name: tomcat # role_name
-    common_files: "{{ tomcat_files }}"
-    common_directories: "{{ tomcat_directories }}"
-    common_acl: "{{ tomcat_acl }}"
+    common_files_role_name: tomcat
 ```
 
 Note: the reason we do not use this role outright in our Ansible play is because we want more control over when and how files are created. As `group_vars` or `host_vars` we can now create a `crl` directory in the Tomcat `conf` directory.
@@ -201,10 +198,7 @@ These dictionaries can be used as-is but they can also be included in other role
     name: c2platform.core.files
     tasks_from: main
   vars:
-    role_name: tomcat # role_name
-    common_files: "{{ tomcat_files }}"
-    common_directories: "{{ tomcat_directories }}"
-    common_acl: "{{ tomcat_acl }}"
+    common_files_role_name: tomcat
 ```
 
 This gives more control over when those files, directories, acl are created. Example below also demonstrates how we introduce our own local variables with prefixed with `tomcat` so that we can configure:
@@ -274,8 +268,5 @@ Or we use it in any other role as described above
     name: c2platform.core.files
     tasks_from: main
   vars:
-    role_name: tomcat # role_name
-    common_files: "{{ tomcat_files }}"
-    common_directories: "{{ tomcat_directories }}"
-    common_acl: "{{ tomcat_acl }}"
+    role_name: tomcat
 ```
