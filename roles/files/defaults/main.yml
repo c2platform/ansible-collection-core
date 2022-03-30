@@ -6,3 +6,4 @@ common_archive: []
 common_files_tmp: /tmp
 common_files_owner: root
 common_files_group: root
+common_disabled: []
