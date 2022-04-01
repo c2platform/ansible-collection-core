@@ -10,7 +10,8 @@ C2 Platform generic roles that are used by all or some other roles. These roles 
 * [files](./roles/files) manage files, directories, ACL.
 * [users](./roles/users) manage Linux accounts.
 * [service](./roles/service) create systemd services.
-* [java](./roles/java). install java, manage keystores.
+* [java](./roles/java) install java, manage keystores.
+* [facts](./roles/facts) gather facts.  
 * [lcm](./roles/lcm) facts for LCM operations for other roles to build upon.
 * [lvm](./roles/lvm) manage data disks for roles using [LVM](https://en.wikipedia.org/wiki/Logical_Volume_Manager_%28Linux%29).
 * [rest](./roles/rest) interact with REST webservices.

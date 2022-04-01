@@ -7,11 +7,12 @@
     common_unarchive: "{{ hostvars[inventory_hostname][common_files_role_name+'_unarchive']|default([]) }}"
     common_files_owner: "{{ hostvars[inventory_hostname][common_files_role_name+'_owner']|default('root') }}"
     common_files_group: "{{ hostvars[inventory_hostname][common_files_role_name+'_group']|default('root') }}"
+    common_disabled: "{{ hostvars[inventory_hostname][common_files_role_name+'_disabled']|default([]) }}"
   when: common_files_role_name is defined
 
 - include_tasks: directories.yml
   with_items: "{{ common_directories }}"
-  when: common_directories is defined
+  when: common_directories is defined and common_directories_set_item not in common_disabled
   loop_control:
     loop_var: common_directories_set_item
   vars:
@@ -19,7 +20,7 @@
 
 - include_tasks: files.yml
   with_items: "{{ common_files }}"
-  when: common_files is defined
+  when: common_files is defined and common_files_set_item not in common_disabled
   loop_control:
     loop_var: common_files_set_item
   vars:
@@ -27,7 +28,7 @@
 
 - include_tasks: acl.yml
   with_items: "{{ common_acl }}"
-  when: common_acl is defined
+  when: common_acl is defined and common_acl_set_item not in common_disabled
   loop_control:
     loop_var: common_acl_set_item
   vars:
@@ -35,7 +36,7 @@
 
 - include_tasks: unarchive.yml
   with_items: "{{ common_unarchive }}"
-  when: common_unarchive is defined
+  when: common_unarchive is defined and common_unarchive_set_item not in common_disabled
   loop_control:
     loop_var: common_unarchive_set_item
   vars:
