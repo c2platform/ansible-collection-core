@@ -1,7 +1,7 @@
 ---
 - name: Add user
   ansible.builtin.user:
-    name: usha # "{{ item['name'] }}"
+    name: "{{ item['name'] }}"
     comment: "{{ item['comment']|default(omit) }}"
     shell: "{{ item['shell']|default('/bin/bash') }}"
     password: "{{ item['password']|default(omit) }}"
