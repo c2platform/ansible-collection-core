@@ -1,0 +1,22 @@
+---
+- name: Add user
+  ansible.builtin.user:
+    name: usha # "{{ item['name'] }}"
+    comment: "{{ item['comment']|default(omit) }}"
+    shell: "{{ item['shell']|default('/bin/bash') }}"
+    password: "{{ item['password']|default(omit) }}"
+    uid: "{{ item['uid']|default(omit) }}"
+    expires: "{{ item['expires']|default(-1) }}"
+  with_items: "{{ users_group_users }}"
+  loop_control:
+    label: "{{ item['name'] }}"
+
+- name: Authorized key
+  authorized_key:
+    user: "{{ item['name'] }}"
+    state: "{{ item['authorized_key']['state']|default('present') }}"
+    key: "{{ item['authorized_key']['key'] }}"
+    validate_certs: "{{ item['authorized_key']['validate_certs']|default(omit) }}"
+  with_items: "{{ users_group_users|selectattr('authorized_key', 'defined')|list }}"
+  loop_control:
+    label: "{{ item['name'] }}"
