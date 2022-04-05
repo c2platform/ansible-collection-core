@@ -9,5 +9,4 @@ dependencies:
   - {role: ajsalminen.hosts, tags: network, when: common_manage_hosts|default(False) }
   - {role: stouts.sudo, tags: sudo, when: common_manage_sudoers|default(False) }
   - {role: alias, tags: alias }
-  - {role: cacerts, tags: ssl, when: common_cacerts_enable|default(False) }
   - {role: arillso.logrotate, tags: logging }
