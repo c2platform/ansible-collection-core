@@ -1,0 +1,7 @@
+---
+- include_tasks: users.yml
+  with_items: "{{ users }}"
+  loop_control:
+    loop_var: users_group
+  vars:
+    users_group_users: "{{ users[users_group] }}"
