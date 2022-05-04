@@ -1,13 +1,13 @@
 ---
 - name: Set files facts
   set_fact:
-    common_directories: "{{ hostvars[inventory_hostname][common_files_role_name+'_directories']|default([]) }}"
-    common_files: "{{ hostvars[inventory_hostname][common_files_role_name+'_files']|default([]) }}"
-    common_acl: "{{ hostvars[inventory_hostname][common_files_role_name+'_acl']|default([]) }}"
-    common_unarchive: "{{ hostvars[inventory_hostname][common_files_role_name+'_unarchive']|default([]) }}"
-    common_files_owner: "{{ hostvars[inventory_hostname][common_files_role_name+'_owner']|default('root') }}"
-    common_files_group: "{{ hostvars[inventory_hostname][common_files_role_name+'_group']|default('root') }}"
-    common_disabled: "{{ hostvars[inventory_hostname][common_files_role_name+'_disabled']|default([]) }}"
+    common_directories: "{{ lookup('vars', common_files_role_name + '_directories', default=[]) }}"
+    common_files: "{{ lookup('vars', common_files_role_name + '_files', default=[]) }}"
+    common_acl: "{{ lookup('vars', common_files_role_name + '_acl', default=[]) }}"
+    common_unarchive: "{{ lookup('vars', common_files_role_name + '_unarchive', default=[]) }}"
+    common_files_owner: "{{ lookup('vars', common_files_role_name + '_owner', default='root') }}"
+    common_files_group: "{{ lookup('vars', common_files_role_name + '_group', default='root') }}"
+    common_disabled: "{{ lookup('vars', common_files_role_name + '_disabled', default=[]) }}"
   when: common_files_role_name is defined
 
 - include_tasks: directories.yml

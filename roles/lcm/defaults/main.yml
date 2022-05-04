@@ -10,5 +10,6 @@ lcm_roles:
   - myapp
   - keycloak
   - nextcloud
+lcm_roles_extra: []
 
 lcm_write_version_file: no

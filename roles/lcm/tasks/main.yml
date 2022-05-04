@@ -9,7 +9,8 @@
     replace: '\2'
 
 - name: lcm_roles_node
-  set_fact: lcm_roles_node="{{ lcm_roles | intersect(ansible_role_names_cleaned) }}"
+  set_fact:
+    lcm_roles_node: "{{ (lcm_roles+lcm_roles_extra)|intersect(ansible_role_names_cleaned) }}"
 
 - name: Determine LCM info facts
   c2platform.core.lcm_info:
