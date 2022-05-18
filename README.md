@@ -1,5 +1,7 @@
 # Ansible Collection - c2platform.core
 
+[![Linters ( Ansible, YAML )](https://github.com/c2platform/ansible-collection-core/actions/workflows/ci.yml/badge.svg)](https://github.com/c2platform/ansible-collection-core/actions/workflows/ci.yml) [![Release and deploy to Galaxy](https://github.com/c2platform/ansible-collection-core/actions/workflows/release.yml/badge.svg)](https://github.com/c2platform/ansible-collection-core/actions/workflows/release.yml)
+
 C2 Platform generic roles that are used by all or some other roles. These roles don't create services / processes on target node but are depedencies e.g. packages required by those roles. Or these roles help with Ansible provisioning for example offers generic Ansible modules, filters etc. 
 
 ## Roles
