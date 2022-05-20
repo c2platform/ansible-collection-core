@@ -7,6 +7,5 @@
     opts: "{{ item['opts'] }}"
     state: "{{ item['state'] }}"
   with_items: '{{ nfs_mounts }}'
-  failed_when: false
   loop_control:
     label: "{{ item['path'] }}"
