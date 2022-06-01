@@ -1,0 +1,38 @@
+---
+- block:
+  - name: CA distribute ( RedHat)
+    get_url:
+      url: '{{ item }}'
+      dest: '/usr/share/pki/ca-trust-source/anchors/{{ item|basename }}.crt'
+    with_items: "{{ os_trusts_urls }}"
+    register: cadownload
+
+  - name: Execute update-ca-trust
+    command: update-ca-trust
+    with_items: '{{ cadownload.results }}'
+    when:
+      - cadownload.results is defined
+      - item.changed
+  when:
+    - ansible_os_family == 'RedHat'
+    - os_trusts_urls is defined
+
+- block:
+    - name: CA distribute ( Debian )
+      get_url:
+        url: '{{ item }}'
+        dest: '/usr/local/share/ca-certificates/{{ item|basename }}.crt'
+      with_items: "{{ os_trusts_urls }}"
+      register: cadownload
+
+    - name: Execute update-ca-certificates
+      command: update-ca-certificates
+      with_items: '{{ cadownload.results }}'
+      loop_control:
+        label: "{{ item['url'] }}"
+      when:
+        - cadownload.results is defined
+        - item.changed
+  when:
+    - ansible_os_family == 'Debian'
+    - os_trusts_urls is defined

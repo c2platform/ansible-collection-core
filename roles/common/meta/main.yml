@@ -2,6 +2,7 @@
 dependencies:
   - {role: bootstrap, tags: ansible }
   - {role: apt_repo, tags: apt, when: ansible_os_family == 'Debian' }
+  - {role: os_trusts, tags: certificates }
   - {role: secrets, tags: vault }
   - {role: files, tags: filesystem }
   - {role: lcm, tags: ansible }

@@ -1,7 +1,7 @@
 ---
 namespace: c2platform
 name: core
-version: "0.1.8"
+version: "0.1.9"
 readme: README.md
 authors:
   - Onno van der Straaten (onno@onknows.com)
