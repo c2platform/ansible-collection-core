@@ -9,3 +9,25 @@
   with_items: "{{ win_features }}"
   loop_control:
     label: "{{ item['name'] }} {{ item['state']|default('present') }}"
+
+- name: Manage services
+  win_service:
+    name: "{{ item['name'] }}"
+    display_name: "{{ item['display_name']|default(omit) }}"
+    description: "{{ item['description']|default(omit) }}"
+    username: "{{ item['username']|default(omit) }}"
+    password: "{{ item['password']|default(omit) }}"
+    desktop_interact: "{{ item['desktop_interact']|default(omit) }}"
+    dependencies: "{{ item['dependencies']|default(omit) }}"
+    dependency_action: "{{ item['dependency_action']|default(omit) }}"
+    required_privileges: "{{ item['required_privileges']|default(omit) }}"
+    failure_actions: "{{ item['failure_actions']|default(omit) }}"
+    failure_command: "{{ item['failure_command']|default(omit) }}"
+    failure_reboot_msg: "{{ item['failure_reboot_msg']|default(omit) }}"
+    failure_reset_period_sec: "{{ item['failure_reset_period_sec']|default(omit) }}"
+    start_mode: "{{ item['start_mode']|default('auto') }}"
+    path: "{{ item['path']|default(omit) }}"
+    state: "{{ item['state']|default('started') }}"
+  with_items: "{{ win_services }}"
+  loop_control:
+    label: "{{ item['name'] }} {{ item['state']|default('started') }}"

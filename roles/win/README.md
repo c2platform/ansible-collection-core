@@ -19,6 +19,17 @@ Create and manage MS Windows.
 
 <!--  A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well. -->
 
+### win_services
+
+Use `win_services` to manage MS Windows services using [ansible.windows.win_service](https://docs.ansible.com/ansible/latest/collections/ansible/windows/win_service_module.html).
+
+```yaml
+win_services:
+  - name: aspnet_state
+```
+
+Default services are configurated to start automatically `start_mode: auto` and `state` is `started`.
+
 ### win_features
 
 Use `win_features` to manage MS Windows features using [ansible.windows.win_feature module](https://docs.ansible.com/ansible/latest/collections/ansible/windows/win_feature_module.html).
