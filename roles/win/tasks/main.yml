@@ -1,0 +1,11 @@
+---
+- name: Manage features
+  win_feature:
+    name: "{{ item['name'] }}"
+    state: "{{ item['state']|default('present') }}"
+    restart: "{{ item['restart']|default(False) }}"
+    include_sub_features: "{{ item['include_sub_features']|default(False) }}"
+    include_management_tools: "{{ item['include_management_tools']|default(False) }}"
+  with_items: "{{ win_features }}"
+  loop_control:
+    label: "{{ item['name'] }} {{ item['state']|default('present') }}"

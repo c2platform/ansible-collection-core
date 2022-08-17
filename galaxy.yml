@@ -1,7 +1,7 @@
 ---
 namespace: c2platform
 name: core
-version: "0.1.9"
+version: "0.2.0"
 readme: README.md
 authors:
   - Onno van der Straaten (onno@onknows.com)
@@ -15,6 +15,7 @@ tags:
   - core
   - collection
   - linux
+  - windows
 
 dependencies: {}
 

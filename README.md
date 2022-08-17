@@ -20,17 +20,22 @@ C2 Platform generic roles that are used by all or some other roles. These roles 
 * [rest](./roles/rest) interact with REST webservices.
 * [postgresql_tasks](./roles/postgresql_tasks) include tasks for PostgreSQL database operations.
 * [postgresql_client](./roles/postgresql_client).
+* [win](./roles/win) manage MS Windows systems.
 
 ## Plugins
 
 Module plugins:
 
-* 
+* [java_facts](./plugins/modules/java_facts.py)
+* [lcm_info](./plugins/modules/lcm_info.py)
+* [set_certificate_facts](./plugins/modules/set_certificate_facts.py)
+* [set_rest_facts](./plugins/modules/set_rest_facts.py)
+* [set_sprint_facts](./plugins/modules/set_sprint_facts.py)
 
 Filter plugins:
 
-*
-
-## TODO
-
-1. 
+* [ansible_filters](./plugins/filters/ansible_filters.py)
+* [cacerts_filters](./plugins/filters/cacerts_filters.py)
+* [files_filters](./plugins/filters/files_filters.py)
+* [java_filters](./plugins/filters/java_filters.py)
+* [lvm_filters](./plugins/filters/lvm_filters.py)
