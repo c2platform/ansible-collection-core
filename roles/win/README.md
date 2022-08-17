@@ -42,6 +42,16 @@ win_features:
 
 Other properties besides `name` are `state`, `restart`, `include_sub_features` and `include_management_tools` with defaults equal to `False` with exception to `state` which default is `present`. 
 
+### win_chocolatey
+
+Manage Chocolatey packages using Ansible collection [chocolatey.chocolatey](https://galaxy.ansible.com/chocolatey/chocolatey)
+
+```yaml
+  win_chocolatey:
+    - name: notepadplusplus
+      version: '6.6'
+```
+
 ## Dependencies
 
 <!--   A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles. -->

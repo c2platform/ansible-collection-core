@@ -31,3 +31,12 @@
   with_items: "{{ win_services }}"
   loop_control:
     label: "{{ item['name'] }} {{ item['state']|default('started') }}"
+
+- name: Manage Chocolatey packages
+  chocolatey.chocolatey.win_chocolatey:
+    name: "{{ item['name'] }}"
+    state: "{{ item['state']|default('present') }}"
+    version: "{{ item['version']|default(omit) }}"
+  with_items: "{{ win_chocolatey }}"
+  loop_control:
+    label: "{{ item['name'] }} {{ item['state']|default('present') }}"

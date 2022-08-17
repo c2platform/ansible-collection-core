@@ -1,3 +1,4 @@
 ---
 win_features: []
 win_services: []
+win_chocolatey: []
